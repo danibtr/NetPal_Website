@@ -55,7 +55,7 @@ a {
 .logo-img {
     width: 80px;  /* حجم الشعار */
     height: 80px;
-    margin-left: 25px; /* مسافة بين الشعار والاسم */
+    margin-left: 15px; /* مسافة بين الشعار والاسم */
 }
 
 .main-nav ul {
@@ -190,4 +190,5 @@ a {
     text-align: center;
     padding: 20px 0;
     font-size: 14px;
+
 }
