@@ -1,0 +1,193 @@
+/* --- متغيرات الألوان (لسهولة التعديل) --- */
+:root {
+    --color-dark-teal: #043c4b;  /* اللون الغامق من هويتك */
+    --color-bright-cyan: #00c6c6; /* اللون الفاتح من هويتك */
+    --color-white: #ffffff;
+    --color-light-gray: #f4f4f4;
+    --font-family: 'Tajawal', sans-serif; /* استخدام الخط الذي جلبناه */
+}
+
+/* --- تنسيقات عامة --- */
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    line-height: 1.7;
+    background-color: var(--color-light-gray);
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3 {
+    font-weight: 700; /* خط عريض للعناوين */
+}
+
+a {
+    text-decoration: none; /* إزالة الخط تحت الروابط */
+}
+
+/* --- 1. الهيدر (الشعار والقائمة) --- */
+.main-header {
+    background: var(--color-white);
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between; /* توزيع العناصر (اللوجو يميناً والقائمة يساراً) */
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    color: var(--color-dark-teal); /* لون اسم الشركة بجانب اللوجو */
+}
+
+.logo-img {
+    width: 80px;  /* حجم الشعار */
+    height: 80px;
+    margin-left: 25px; /* مسافة بين الشعار والاسم */
+}
+
+.main-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none; /* إزالة النقاط من القائمة */
+    display: flex;
+}
+
+.main-nav li {
+    margin-right: 20px;
+}
+
+.main-nav a {
+    color: #555;
+    font-weight: 700;
+    font-size: 16px;
+}
+.main-nav a:hover {
+    color: var(--color-bright-cyan); /* تغيير اللون عند مرور الماوس */
+}
+
+/* --- 2. القسم الرئيسي (Hero) --- */
+.hero {
+    /* هنا نستخدم التدرج اللوني الخاص بك */
+    background: linear-gradient(135deg, var(--color-dark-teal) 0%, var(--color-bright-cyan) 100%);
+    color: var(--color-white);
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero h2 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+/* --- تنسيق الأزرار --- */
+.btn {
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    transition: all 0.3s ease; /* حركة ناعمة عند التغيير */
+}
+
+.btn-primary {
+    background: var(--color-white);
+    color: var(--color-dark-teal);
+}
+.btn-primary:hover {
+    background: var(--color-light-gray);
+    transform: translateY(-2px); /* حركة بسيطة للأعلى عند الماوس */
+}
+
+.btn-secondary {
+    background: var(--color-dark-teal);
+    color: var(--color-white);
+    border: 1px solid var(--color-dark-teal);
+}
+.btn-secondary:hover {
+    background: var(--color-bright-cyan);
+    border-color: var(--color-bright-cyan);
+    color: var(--color-dark-teal);
+}
+
+
+/* --- 3. قسم الخدمات --- */
+.services-section {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.services-section h2 {
+    font-size: 36px;
+    margin-bottom: 40px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* شبكة مرنة */
+    gap: 25px; /* مسافة بين كروت الخدمات */
+}
+
+.service-card {
+    background: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: right; /* محاذاة النص لليمين */
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px); /* حركة للكارت عند مرور الماوس */
+}
+
+.service-card h3 {
+    color: var(--color-dark-teal);
+    margin-top: 0;
+}
+
+.service-card p {
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+
+/* --- 4. قسم التواصل --- */
+.contact-section {
+    background: var(--color-dark-teal); /* خلفية غامقة */
+    color: var(--color-white);
+    padding: 60px 0;
+    text-align: center;
+}
+.contact-section h2 {
+    font-size: 36px;
+}
+
+.contact-links a {
+    margin: 10px;
+}
+
+/* --- 5. الفوتر (ذيل الصفحة) --- */
+.main-footer {
+    background: #333;
+    color: #aaa;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 14px;
+}
