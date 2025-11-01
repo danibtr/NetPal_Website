@@ -52,10 +52,11 @@ a {
     color: var(--color-dark-teal); /* لون اسم الشركة بجانب اللوجو */
 }
 
+/* ★★ تم تحديث هذا الجزء بناءً على طلبك ★★ */
 .logo-img {
-    width: 80px;  /* حجم الشعار */
-    height: 80px;
-    margin-left: 15px; /* مسافة بين الشعار والاسم */
+    width: 75px;  /* تم تكبير حجم الشعار */
+    height: 75px; /* تم تكبير حجم الشعار */
+    margin-left: 15px; /* تم تعديل المسافة بين الشعار والاسم */
 }
 
 .main-nav ul {
@@ -190,5 +191,4 @@ a {
     text-align: center;
     padding: 20px 0;
     font-size: 14px;
-
 }
