@@ -127,9 +127,13 @@ a {
     overflow: hidden; 
     
     /* جعل الحاوية بنسبة 16:9 */
-    padding-top: 56.25%; /* (9 مقسومة على 16 = 56.25%) */
+    padding-top: 56.25%; 
 
     background: #333; 
+    
+    /* ★★ الإضافات الجديدة: الإطار والزوايا ★★ */
+    border-radius: 10px; /* زوايا دائرية جميلة */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* ظل ناعم كإطار */
 }
 
 
@@ -155,7 +159,7 @@ a {
 
 #slide-2 {
     animation-name: fadeSlide2;
-    filter: blur(3px); /* إضافة تغبيش (Blur) للصورة التجريدية */
+    filter: blur(4px); /* إضافة تغبيش (Blur) للصورة التجريدية */
 }
 
 /* تنسيق حاوية الشعار المتحرك */
@@ -175,7 +179,7 @@ a {
 
 /* تكبير الشعار المتحرك */
 .animated-logo {
-    width: 650px; /* حجم الشعار المتحرك */
+    width: 500px; /* حجم الشعار المتحرك */
     height: auto;
     transform: scale(1); 
     animation: pulseLogo 3s ease-in-out infinite alternate; 
@@ -304,61 +308,76 @@ a {
 
     /* --- تعديل الهيدر (اللوجو فوق الاسم) --- */
     .main-header .container {
-        flex-direction: column; /* اجعل العناصر (اللوجو والقائمة) تحت بعضها */
+        flex-direction: column; 
         padding-top: 10px;
     }
 
     /* جعل اللوجو والاسم تحت بعضهما عمودياً */
     .logo-link {
-        flex-direction: column; /* يكدس الشعار فوق الاسم */
-        align-items: center;    /* يوسطهما */
-        margin-bottom: 20px;    /* مسافة أسفل الاسم قبل القائمة */
+        flex-direction: column; 
+        align-items: center;    
+        margin-bottom: 20px;    
     }
 
     .logo-img {
-        margin-left: 0;     /* إزالة الهامش الجانبي (كان 15px) */
-        margin-bottom: 5px; /* إضافة هامش صغير أسفل الشعار */
-        width: 70px;        /* حجم الشعار (يمكنك تعديله) */
+        margin-left: 0;     
+        margin-bottom: 5px; 
+        width: 70px;        
         height: 70px;
     }
 
     /* تنسيق اسم "NetPal" تحت الشعار */
     .logo-link h1 {
-        font-size: 28px; /* حجم خط مناسب للاسم (يمكنك تعديله) */
-        margin: 0;       /* إزالة الهوامش الافتراضية للـ h1 */
+        font-size: 28px; 
+        margin: 0;       
     }
     
     /* تنسيق القائمة */
     .main-nav ul {
-        flex-direction: column; /* اجعل عناصر القائمة (خدماتنا/تواصل) تحت بعضها */
-        align-items: center; /* وسطهم */
-        padding-right: 0; /* أزل الحشوة الجانبية */
+        flex-direction: column; 
+        align-items: center; 
+        padding-right: 0; 
     }
 
     .main-nav li {
-        margin-right: 0; /* أزل المسافات الجانبية */
-        margin-bottom: 10px; /* أضف مسافة بين عناصر القائمة */
+        margin-right: 0; 
+        margin-bottom: 10px; 
     }
 
     /* --- تعديلات إضافية لتحسين شكل الموبايل --- */
     
     /* تصغير خطوط قسم الترحيب */
     .hero-welcome-text h2 {
-        font-size: 36px; /* تصغير خط العنوان الرئيسي */
+        font-size: 36px; 
     }
     
     .hero-welcome-text p {
-        font-size: 18px; /* تصغير الخط الفرعي */
+        font-size: 18px; 
     }
 
     /* تصغير اللوجو المتحرك ليتناسب مع الشاشة */
     .animated-logo {
-        width: 300px; /* تصغير حجم اللوجو المتحرك على الموبايل (كان 500) */
+        width: 300px; 
     }
 
     /* جعل كروت الخدمات تحت بعضها */
     .services-grid {
-        grid-template-columns: 1fr; /* اجعل كروت الخدمات مكدسة عمودياً */
+        grid-template-columns: 1fr; 
     }
-
+    
+    /* ★★ إضافة جديدة: إزالة الحشو الداخلي للحاوية على الموبايل ★★ */
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    /* إزالة الحشو من حاوية السلايدر على الموبايل */
+    div.container[style*="padding-top: 30px"] {
+        padding: 10px 0 !important; /* إزالة الحشو الجانبي وجعل العلوي والسفلي أصغر */
+    }
+    
+    /* إزالة الزوايا الدائرية للسلايدر على الموبايل (ليبدو ممتلئاً) */
+    .hero-slider {
+        border-radius: 0;
+    }
 }
