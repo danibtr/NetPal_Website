@@ -42,14 +42,14 @@ a {
 
 .main-header .container {
     display: flex;
-    justify-content: space-between; /* توزيع العناصر (اللوجو يميناً والقائمة يساراً) */
+    justify-content: space-between; 
     align-items: center;
 }
 
 .logo-link {
     display: flex;
     align-items: center;
-    color: var(--color-dark-teal); /* لون اسم الشركة بجانب اللوجو */
+    color: var(--color-dark-teal); 
 }
 
 .logo-img {
@@ -61,7 +61,7 @@ a {
 .main-nav ul {
     margin: 0;
     padding: 0;
-    list-style: none; /* إزالة النقاط من القائمة */
+    list-style: none; 
     display: flex;
 }
 
@@ -75,35 +75,64 @@ a {
     font-size: 16px;
 }
 .main-nav a:hover {
-    color: var(--color-bright-cyan); /* تغيير اللون عند مرور الماوس */
+    color: var(--color-bright-cyan); 
 }
 
 
-/* --- 2. القسم الرئيسي (Hero) - ★★ تم تحديث هذا القسم بالكامل ★★ --- */
-.hero {
-    position: relative; /* مهم جداً لتثبيت الطبقات المتحركة */
-    color: var(--color-white);
-    padding: 100px 0;
+/* --- القسم الجديد: نص الترحيب الثابت --- */
+.hero-welcome-text {
+    background: var(--color-white); 
     text-align: center;
-    overflow: hidden; /* لإخفاء أي أجزاء زائدة من الصور */
-    min-height: 450px; /* يعطي ارتفاعاً للقسم */
+    padding: 50px 0;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-/* تنسيق النص ليبقى في الأعلى */
-.hero-content {
-    position: relative; /* يبقى فوق الطبقات الأخرى */
-    z-index: 10; /* رقم عالي ليضمن بقاءه في الأعلى */
-}
-
-.hero h2 {
+.hero-welcome-text h2 {
+    color: var(--color-dark-teal); 
     font-size: 48px;
     margin-bottom: 15px;
 }
 
-.hero p {
+.hero-welcome-text p {
+    color: #555; 
     font-size: 20px;
     margin-bottom: 30px;
 }
+
+/* زر بلون داكن ليتناسب مع الخلفية البيضاء */
+.btn-primary-dark {
+    background: var(--color-dark-teal);
+    color: var(--color-white);
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-dark-teal);
+}
+.btn-primary-dark:hover {
+    background: var(--color-bright-cyan);
+    border-color: var(--color-bright-cyan);
+    color: var(--color-dark-teal);
+    transform: translateY(-2px);
+}
+
+
+/* --- 2. القسم الرئيسي (Hero) - ★★ تم تعديله ليصبح شريط صور فقط ★★ --- */
+.hero-slider {
+    position: relative; 
+    color: var(--color-white);
+    text-align: center;
+    overflow: hidden; 
+    
+    /* ★★ التعديل 1: جعل الحاوية بنسبة 16:9 ★★ */
+    /* height: 450px;  (تم إلغاء هذا السطر) */
+    padding-top: 56.25%; /* (هذا هو السطر الجديد: 9 مقسومة على 16 = 56.25%) */
+
+    background: #333; 
+}
+
 
 /* تنسيق الطبقات المتحركة (الصور) */
 .slide {
@@ -114,19 +143,21 @@ a {
     height: 100%;
     background-size: cover;
     background-position: center center;
-    opacity: 0; /* تبدأ مخفية */
-    z-index: 1; /* خلف النص */
-    animation-duration: 12s; /* مدة الدورة الكاملة (12 ثانية) */
+    opacity: 0; 
+    z-index: 1; 
+    animation-duration: 12s; 
     animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite; /* تكرار لا نهائي */
+    animation-iteration-count: infinite; 
 }
 
-/* تطبيق الحركات المخصصة لكل طبقة */
 #slide-1 {
     animation-name: fadeSlide1;
 }
+
 #slide-2 {
     animation-name: fadeSlide2;
+    /* ★★ التعديل 2: إضافة تغبيش (Blur) للصورة التجريدية ★★ */
+    filter: blur(4px);
 }
 
 /* تنسيق حاوية الشعار المتحرك */
@@ -139,16 +170,17 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0; /* تبدأ مخفية */
-    z-index: 2; /* فوق الطبقة 2، خلف النص */
-    animation: fadeLogo 12s ease-in-out infinite; /* نفس مدة الدورة */
+    opacity: 0; 
+    z-index: 2; 
+    animation: fadeLogo 12s ease-in-out infinite; 
 }
 
+/* ★★ التعديل 3: تكبير الشعار المتحرك ★★ */
 .animated-logo {
-    width: 250px; /* حجم الشعار الأبيض (يمكنك تعديله) */
+    width: 500px; /* (تم تكبيره من 400px إلى 500px) */
     height: auto;
-    transform: scale(1); /* الحجم الطبيعي */
-    animation: pulseLogo 3s ease-in-out infinite alternate; /* حركة "نبض" للشعار */
+    transform: scale(1); 
+    animation: pulseLogo 3s ease-in-out infinite alternate; 
 }
 
 
@@ -157,7 +189,6 @@ a {
     padding: 60px 0;
     text-align: center;
 }
-/* (باقي الكود كما هو) ... */
 .services-section h2 {
     font-size: 36px;
     margin-bottom: 40px;
@@ -210,7 +241,7 @@ a {
     font-size: 14px;
 }
 
-/* --- تنسيق الأزرار (كما هو) --- */
+/* --- تنسيق الأزرار (الأصلية) --- */
 .btn {
     padding: 12px 25px;
     border-radius: 5px;
@@ -238,47 +269,32 @@ a {
     color: var(--color-dark-teal);
 }
 
-/* --- ★★ كود الحركات (Keyframes) - أضف هذا في نهاية الملف ★★ --- */
-
-/* شرح الدورة (12 ثانية):
-  - 0-5 ثواني: صورة المكتب (slide-1) ظاهرة.
-  - 5-6 ثواني: صورة المكتب تختفي.
-  - 6-11 ثانية: صورة الخلفية (slide-2) ظاهرة.
-  - 11-12 ثانية: صورة الخلفية تختفي.
-*/
-
-/* حركة صورة المكتب (Slide 1) */
+/* --- كود الحركات (Keyframes) - (نفسه بدون تغيير) --- */
 @keyframes fadeSlide1 {
-    0%   { opacity: 1; } /* تبدأ ظاهرة */
-    41.6% { opacity: 1; } /* تبقى ظاهرة لـ 5 ثواني */
-    50%  { opacity: 0; } /* تختفي خلال ثانية واحدة */
-    100% { opacity: 0; } /* تبقى مخفية */
+    0%   { opacity: 1; } 
+    41.6% { opacity: 1; } 
+    50%  { opacity: 0; } 
+    100% { opacity: 0; } 
 }
-
-/* حركة صورة الخلفية (Slide 2) */
 @keyframes fadeSlide2 {
-    0%   { opacity: 0; } /* تبدأ مخفية */
+    0%   { opacity: 0; } 
     41.6% { opacity: 0; }
-    50%  { opacity: 1; } /* تظهر خلال ثانية واحدة */
-    91.6% { opacity: 1; } /* تبقى ظاهرة لـ 5 ثواني */
-    100% { opacity: 0; } /* تختفي خلال ثانية واحدة */
+    50%  { opacity: 1; } 
+    91.6% { opacity: 1; } 
+    100% { opacity: 0; } 
 }
-
-/* حركة حاوية الشعار الأبيض (لتظهر وتختفي مع Slide 2) */
 @keyframes fadeLogo {
     0%   { opacity: 0; }
     41.6% { opacity: 0; }
-    50%  { opacity: 1; } /* تظهر مع Slide 2 */
+    50%  { opacity: 1; } 
     91.6% { opacity: 1; }
-    100% { opacity: 0; } /* تختفي مع Slide 2 */
+    100% { opacity: 0; } 
 }
-
-/* حركة "النبض" (Pulse) للشعار الأبيض نفسه */
 @keyframes pulseLogo {
     from {
         transform: scale(1);
     }
     to {
-        transform: scale(1.05); /* يكبر 5% ثم يعود */
+        transform: scale(1.05); 
     }
 }
