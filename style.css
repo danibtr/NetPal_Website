@@ -175,7 +175,7 @@ a {
 
 /* تكبير الشعار المتحرك */
 .animated-logo {
-    width: 500px; /* حجم الشعار المتحرك */
+    width: 800px; /* حجم الشعار المتحرك */
     height: auto;
     transform: scale(1); 
     animation: pulseLogo 3s ease-in-out infinite alternate; 
@@ -242,4 +242,122 @@ a {
 /* --- تنسيق الأزرار (الأصلية) --- */
 .btn {
     padding: 12px 25px;
-    border-radius:
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+.btn-primary {
+    background: var(--color-white);
+    color: var(--color-dark-teal);
+}
+.btn-primary:hover {
+    background: var(--color-light-gray);
+    transform: translateY(-2px);
+}
+.btn-secondary {
+    background: var(--color-dark-teal);
+    color: var(--color-white);
+    border: 1px solid var(--color-dark-teal);
+}
+.btn-secondary:hover {
+    background: var(--color-bright-cyan);
+    border-color: var(--color-bright-cyan);
+    color: var(--color-dark-teal);
+}
+
+/* --- كود الحركات (Keyframes) --- */
+@keyframes fadeSlide1 {
+    0%   { opacity: 1; } 
+    41.6% { opacity: 1; } 
+    50%  { opacity: 0; } 
+    100% { opacity: 0; } 
+}
+@keyframes fadeSlide2 {
+    0%   { opacity: 0; } 
+    41.6% { opacity: 0; }
+    50%  { opacity: 1; } 
+    91.6% { opacity: 1; } 
+    100% { opacity: 0; } 
+}
+@keyframes fadeLogo {
+    0%   { opacity: 0; }
+    41.6% { opacity: 0; }
+    50%  { opacity: 1; } 
+    91.6% { opacity: 1; }
+    100% { opacity: 0; } 
+}
+@keyframes pulseLogo {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.05); 
+    }
+}
+
+
+/* --- ★★ كود تنسيق الموبايل (النسخة المحدثة) ★★ --- */
+
+@media (max-width: 768px) {
+
+    /* --- تعديل الهيدر (اللوجو فوق الاسم) --- */
+    .main-header .container {
+        flex-direction: column; /* اجعل العناصر (اللوجو والقائمة) تحت بعضها */
+        padding-top: 10px;
+    }
+
+    /* جعل اللوجو والاسم تحت بعضهما عمودياً */
+    .logo-link {
+        flex-direction: column; /* يكدس الشعار فوق الاسم */
+        align-items: center;    /* يوسطهما */
+        margin-bottom: 20px;    /* مسافة أسفل الاسم قبل القائمة */
+    }
+
+    .logo-img {
+        margin-left: 0;     /* إزالة الهامش الجانبي (كان 15px) */
+        margin-bottom: 5px; /* إضافة هامش صغير أسفل الشعار */
+        width: 70px;        /* حجم الشعار (يمكنك تعديله) */
+        height: 70px;
+    }
+
+    /* تنسيق اسم "NetPal" تحت الشعار */
+    .logo-link h1 {
+        font-size: 28px; /* حجم خط مناسب للاسم (يمكنك تعديله) */
+        margin: 0;       /* إزالة الهوامش الافتراضية للـ h1 */
+    }
+    
+    /* تنسيق القائمة */
+    .main-nav ul {
+        flex-direction: column; /* اجعل عناصر القائمة (خدماتنا/تواصل) تحت بعضها */
+        align-items: center; /* وسطهم */
+        padding-right: 0; /* أزل الحشوة الجانبية */
+    }
+
+    .main-nav li {
+        margin-right: 0; /* أزل المسافات الجانبية */
+        margin-bottom: 10px; /* أضف مسافة بين عناصر القائمة */
+    }
+
+    /* --- تعديلات إضافية لتحسين شكل الموبايل --- */
+    
+    /* تصغير خطوط قسم الترحيب */
+    .hero-welcome-text h2 {
+        font-size: 36px; /* تصغير خط العنوان الرئيسي */
+    }
+    
+    .hero-welcome-text p {
+        font-size: 18px; /* تصغير الخط الفرعي */
+    }
+
+    /* تصغير اللوجو المتحرك ليتناسب مع الشاشة */
+    .animated-logo {
+        width: 300px; /* تصغير حجم اللوجو المتحرك على الموبايل (كان 500) */
+    }
+
+    /* جعل كروت الخدمات تحت بعضها */
+    .services-grid {
+        grid-template-columns: 1fr; /* اجعل كروت الخدمات مكدسة عمودياً */
+    }
+}
