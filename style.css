@@ -155,7 +155,7 @@ a {
 
 #slide-2 {
     animation-name: fadeSlide2;
-    filter: blur(4px); /* إضافة تغبيش (Blur) للصورة التجريدية */
+    filter: blur(3px); /* إضافة تغبيش (Blur) للصورة التجريدية */
 }
 
 /* تنسيق حاوية الشعار المتحرك */
@@ -175,7 +175,7 @@ a {
 
 /* تكبير الشعار المتحرك */
 .animated-logo {
-    width: 800px; /* حجم الشعار المتحرك */
+    width: 650px; /* حجم الشعار المتحرك */
     height: auto;
     transform: scale(1); 
     animation: pulseLogo 3s ease-in-out infinite alternate; 
@@ -360,4 +360,5 @@ a {
     .services-grid {
         grid-template-columns: 1fr; /* اجعل كروت الخدمات مكدسة عمودياً */
     }
+
 }
