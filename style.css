@@ -159,7 +159,7 @@ a {
 
 #slide-2 {
     animation-name: fadeSlide2;
-    filter: blur(4px); /* إضافة تغبيش (Blur) للصورة التجريدية */
+    filter: blur(2px); /* إضافة تغبيش (Blur) للصورة التجريدية */
 }
 
 /* تنسيق حاوية الشعار المتحرك */
@@ -179,7 +179,7 @@ a {
 
 /* تكبير الشعار المتحرك */
 .animated-logo {
-    width: 500px; /* حجم الشعار المتحرك */
+    width: 450px; /* حجم الشعار المتحرك */
     height: auto;
     transform: scale(1); 
     animation: pulseLogo 3s ease-in-out infinite alternate; 
@@ -380,4 +380,5 @@ a {
     .hero-slider {
         border-radius: 0;
     }
+
 }
