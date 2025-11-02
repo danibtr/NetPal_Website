@@ -52,11 +52,10 @@ a {
     color: var(--color-dark-teal); /* لون اسم الشركة بجانب اللوجو */
 }
 
-/* ★★ تم تحديث هذا الجزء بناءً على طلبك ★★ */
 .logo-img {
-    width: 75px;  /* تم تكبير حجم الشعار */
-    height: 75px; /* تم تكبير حجم الشعار */
-    margin-left: 15px; /* تم تعديل المسافة بين الشعار والاسم */
+    width: 75px;  /* حجم الشعار */
+    height: 75px; /* حجم الشعار */
+    margin-left: 15px; /* المسافة بين الشعار والاسم */
 }
 
 .main-nav ul {
@@ -79,13 +78,21 @@ a {
     color: var(--color-bright-cyan); /* تغيير اللون عند مرور الماوس */
 }
 
-/* --- 2. القسم الرئيسي (Hero) --- */
+
+/* --- 2. القسم الرئيسي (Hero) - ★★ تم تحديث هذا القسم بالكامل ★★ --- */
 .hero {
-    /* هنا نستخدم التدرج اللوني الخاص بك */
-    background: linear-gradient(135deg, var(--color-dark-teal) 0%, var(--color-bright-cyan) 100%);
+    position: relative; /* مهم جداً لتثبيت الطبقات المتحركة */
     color: var(--color-white);
     padding: 100px 0;
     text-align: center;
+    overflow: hidden; /* لإخفاء أي أجزاء زائدة من الصور */
+    min-height: 450px; /* يعطي ارتفاعاً للقسم */
+}
+
+/* تنسيق النص ليبقى في الأعلى */
+.hero-content {
+    position: relative; /* يبقى فوق الطبقات الأخرى */
+    z-index: 10; /* رقم عالي ليضمن بقاءه في الأعلى */
 }
 
 .hero h2 {
@@ -98,34 +105,50 @@ a {
     margin-bottom: 30px;
 }
 
-/* --- تنسيق الأزرار --- */
-.btn {
-    padding: 12px 25px;
-    border-radius: 5px;
-    font-weight: 700;
-    font-size: 16px;
-    display: inline-block;
-    transition: all 0.3s ease; /* حركة ناعمة عند التغيير */
+/* تنسيق الطبقات المتحركة (الصور) */
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    opacity: 0; /* تبدأ مخفية */
+    z-index: 1; /* خلف النص */
+    animation-duration: 12s; /* مدة الدورة الكاملة (12 ثانية) */
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite; /* تكرار لا نهائي */
 }
 
-.btn-primary {
-    background: var(--color-white);
-    color: var(--color-dark-teal);
+/* تطبيق الحركات المخصصة لكل طبقة */
+#slide-1 {
+    animation-name: fadeSlide1;
 }
-.btn-primary:hover {
-    background: var(--color-light-gray);
-    transform: translateY(-2px); /* حركة بسيطة للأعلى عند الماوس */
+#slide-2 {
+    animation-name: fadeSlide2;
 }
 
-.btn-secondary {
-    background: var(--color-dark-teal);
-    color: var(--color-white);
-    border: 1px solid var(--color-dark-teal);
+/* تنسيق حاوية الشعار المتحرك */
+.animated-logo-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* تبدأ مخفية */
+    z-index: 2; /* فوق الطبقة 2، خلف النص */
+    animation: fadeLogo 12s ease-in-out infinite; /* نفس مدة الدورة */
 }
-.btn-secondary:hover {
-    background: var(--color-bright-cyan);
-    border-color: var(--color-bright-cyan);
-    color: var(--color-dark-teal);
+
+.animated-logo {
+    width: 250px; /* حجم الشعار الأبيض (يمكنك تعديله) */
+    height: auto;
+    transform: scale(1); /* الحجم الطبيعي */
+    animation: pulseLogo 3s ease-in-out infinite alternate; /* حركة "نبض" للشعار */
 }
 
 
@@ -134,36 +157,31 @@ a {
     padding: 60px 0;
     text-align: center;
 }
-
+/* (باقي الكود كما هو) ... */
 .services-section h2 {
     font-size: 36px;
     margin-bottom: 40px;
 }
-
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* شبكة مرنة */
-    gap: 25px; /* مسافة بين كروت الخدمات */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
 }
-
 .service-card {
     background: var(--color-white);
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     padding: 30px;
-    text-align: right; /* محاذاة النص لليمين */
+    text-align: right;
     transition: transform 0.3s ease;
 }
-
 .service-card:hover {
-    transform: translateY(-5px); /* حركة للكارت عند مرور الماوس */
+    transform: translateY(-5px);
 }
-
 .service-card h3 {
     color: var(--color-dark-teal);
     margin-top: 0;
 }
-
 .service-card p {
     font-size: 15px;
     margin-bottom: 25px;
@@ -171,7 +189,7 @@ a {
 
 /* --- 4. قسم التواصل --- */
 .contact-section {
-    background: var(--color-dark-teal); /* خلفية غامقة */
+    background: var(--color-dark-teal);
     color: var(--color-white);
     padding: 60px 0;
     text-align: center;
@@ -179,7 +197,6 @@ a {
 .contact-section h2 {
     font-size: 36px;
 }
-
 .contact-links a {
     margin: 10px;
 }
@@ -191,4 +208,77 @@ a {
     text-align: center;
     padding: 20px 0;
     font-size: 14px;
+}
+
+/* --- تنسيق الأزرار (كما هو) --- */
+.btn {
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+.btn-primary {
+    background: var(--color-white);
+    color: var(--color-dark-teal);
+}
+.btn-primary:hover {
+    background: var(--color-light-gray);
+    transform: translateY(-2px);
+}
+.btn-secondary {
+    background: var(--color-dark-teal);
+    color: var(--color-white);
+    border: 1px solid var(--color-dark-teal);
+}
+.btn-secondary:hover {
+    background: var(--color-bright-cyan);
+    border-color: var(--color-bright-cyan);
+    color: var(--color-dark-teal);
+}
+
+/* --- ★★ كود الحركات (Keyframes) - أضف هذا في نهاية الملف ★★ --- */
+
+/* شرح الدورة (12 ثانية):
+  - 0-5 ثواني: صورة المكتب (slide-1) ظاهرة.
+  - 5-6 ثواني: صورة المكتب تختفي.
+  - 6-11 ثانية: صورة الخلفية (slide-2) ظاهرة.
+  - 11-12 ثانية: صورة الخلفية تختفي.
+*/
+
+/* حركة صورة المكتب (Slide 1) */
+@keyframes fadeSlide1 {
+    0%   { opacity: 1; } /* تبدأ ظاهرة */
+    41.6% { opacity: 1; } /* تبقى ظاهرة لـ 5 ثواني */
+    50%  { opacity: 0; } /* تختفي خلال ثانية واحدة */
+    100% { opacity: 0; } /* تبقى مخفية */
+}
+
+/* حركة صورة الخلفية (Slide 2) */
+@keyframes fadeSlide2 {
+    0%   { opacity: 0; } /* تبدأ مخفية */
+    41.6% { opacity: 0; }
+    50%  { opacity: 1; } /* تظهر خلال ثانية واحدة */
+    91.6% { opacity: 1; } /* تبقى ظاهرة لـ 5 ثواني */
+    100% { opacity: 0; } /* تختفي خلال ثانية واحدة */
+}
+
+/* حركة حاوية الشعار الأبيض (لتظهر وتختفي مع Slide 2) */
+@keyframes fadeLogo {
+    0%   { opacity: 0; }
+    41.6% { opacity: 0; }
+    50%  { opacity: 1; } /* تظهر مع Slide 2 */
+    91.6% { opacity: 1; }
+    100% { opacity: 0; } /* تختفي مع Slide 2 */
+}
+
+/* حركة "النبض" (Pulse) للشعار الأبيض نفسه */
+@keyframes pulseLogo {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.05); /* يكبر 5% ثم يعود */
+    }
 }
