@@ -1,97 +1,146 @@
-/* (أكوادك القديمة موجودة، أضفنا عليها ما يلي) */
-
-/* --- تنسيق قائمة الميزات داخل الكرت --- */
-.features-list {
-    list-style: none;
-    padding: 0;
-    text-align: right;
-    margin: 15px 0;
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 5px;
+/* --- المتغيرات والألوان --- */
+:root {
+    --color-dark-teal: #043c4b;  
+    --color-bright-cyan: #00c6c6; 
+    --color-white: #ffffff;
+    --color-bg: #f8f9fa;
+    --font-main: 'Tajawal', sans-serif;
 }
 
-.features-list li {
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #444;
+body {
+    font-family: var(--font-main);
+    margin: 0; padding: 0;
+    background-color: var(--color-bg);
+    color: #333;
 }
 
-/* --- زر الطلب الرئيسي --- */
-.btn-main {
-    background-color: var(--color-dark-teal);
+.container {
+    width: 90%; max-width: 1200px;
+    margin: 0 auto; padding: 0 15px;
+}
+
+/* --- الهيدر --- */
+.main-header {
+    background: var(--color-white);
+    padding: 15px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: sticky; top: 0; z-index: 100;
+}
+.main-header .container { display: flex; justify-content: space-between; align-items: center; }
+.logo-link { display: flex; align-items: center; text-decoration: none; color: var(--color-dark-teal); }
+.logo-img { width: 60px; height: 60px; margin-left: 15px; }
+.main-nav ul { display: flex; list-style: none; padding: 0; margin: 0; }
+.main-nav li { margin-right: 25px; }
+.main-nav a { text-decoration: none; color: #555; font-weight: bold; transition: 0.3s; }
+.main-nav a:hover { color: var(--color-bright-cyan); }
+
+/* --- الترحيب --- */
+.hero-welcome-text {
+    background: var(--color-white); text-align: center; padding: 60px 0;
+    border-bottom: 1px solid #eee;
+}
+.hero-welcome-text h2 { font-size: 2.5rem; color: var(--color-dark-teal); margin-bottom: 10px; }
+.hero-welcome-text p { font-size: 1.2rem; color: #777; margin-bottom: 30px; }
+
+/* --- السلايدر --- */
+.hero-slider {
+    position: relative; overflow: hidden; padding-top: 50%; background: #222;
+    border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+.slide {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover; background-position: center;
+    animation: fade 12s infinite; opacity: 0;
+}
+#slide-1 { animation-name: fade1; }
+#slide-2 { animation-name: fade2; }
+.animated-logo { width: 600px; max-width: 80%; animation: pulse 3s infinite alternate; }
+.animated-logo-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center; z-index: 2;
+}
+
+/* --- الخدمات (التصميم الجديد) --- */
+.services-section { padding: 80px 0; }
+.services-section h2 { text-align: center; font-size: 2.2rem; color: var(--color-dark-teal); margin-bottom: 50px; }
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.service-card {
+    background: var(--color-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+    display: flex; flex-direction: column;
+}
+
+.service-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    border-color: var(--color-bright-cyan);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--color-dark-teal), #065a6e);
+    padding: 20px;
     color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
-    display: block;
-}
-.btn-main:hover {
-    background-color: var(--color-bright-cyan);
-    color: var(--color-dark-teal);
-}
-
-/* --- النافذة المنبثقة (Modal) --- */
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.6); /* خلفية سوداء شفافة */
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
     text-align: center;
-    position: relative;
-    animation: slideDown 0.3s ease-out;
 }
 
-.close-modal {
-    position: absolute;
-    top: 10px;
-    left: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #aaa;
-}
-.close-modal:hover { color: black; }
+.service-card h3 { margin: 0; font-size: 1.4rem; }
 
-/* أزرار الواتساب داخل النافذة */
-.btn-whatsapp {
+.card-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+
+.service-card p {
+    font-size: 1rem; color: #666; line-height: 1.6; margin-bottom: 20px; flex-grow: 1;
+}
+
+.price-tag {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-bright-cyan);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.btn-order {
     display: block;
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    background-color: #25D366; /* لون واتساب */
+    background-color: #25D366; /* واتساب */
     color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
     text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
 }
-.btn-whatsapp:hover {
-    background-color: #128C7E;
-}
+.btn-order:hover { background-color: #128C7E; }
 
-@keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+/* --- التواصل --- */
+.contact-section { background: var(--color-dark-teal); color: white; padding: 60px 0; text-align: center; }
+.btn { padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin: 5px; font-weight: bold; }
+.btn-primary { background: white; color: var(--color-dark-teal); }
+.btn-secondary { border: 2px solid white; color: white; }
+
+.main-footer { background: #222; color: #888; text-align: center; padding: 20px; font-size: 0.9rem; }
+
+/* --- الحركات --- */
+@keyframes fade1 { 0%,45%{opacity:1} 55%,100%{opacity:0} }
+@keyframes fade2 { 0%,45%{opacity:0} 55%,100%{opacity:1} }
+@keyframes pulse { from{transform:scale(1)} to{transform:scale(1.05)} }
+
+/* --- الموبايل --- */
+@media (max-width: 768px) {
+    .main-header .container { flex-direction: column; }
+    .logo-link { margin-bottom: 15px; }
+    .main-nav ul { flex-direction: column; align-items: center; }
+    .main-nav li { margin: 5px 0; }
+    .hero-slider { padding-top: 70%; border-radius: 0; }
+    .animated-logo { width: 200px; }
 }

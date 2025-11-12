@@ -39,8 +39,8 @@
     <section class="hero-welcome-text">
         <div class="container">
             <h2>أهلاً بكم في نيتبال</h2>
-            <p>نقدم خدمات انترنت متنوعة ونساعدك في كسب المال من الإنترنت.</p>
-            <a href="#services" class="btn btn-primary-dark">استكشف خدماتنا</a>
+            <p>شريكك الرقمي للنجاح والنمو عبر الإنترنت.</p>
+            <a href="#services" class="btn btn-primary-dark">تصفح الخدمات</a>
         </div>
     </section>
 
@@ -56,33 +56,18 @@
 
     <section id="services" class="services-section">
         <div class="container">
-            <h2>خدماتنا المميزة</h2>
+            <h2>باقاتنا وخدماتنا</h2>
             
             <div id="dynamic-services-container" class="services-grid">
-                <p id="loading-msg" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري الاتصال بقاعدة البيانات...</p>
+                <div class="loading-spinner">جاري تحميل الخدمات...</div>
             </div>
         </div>
     </section>
 
-    <div id="whatsappModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 style="color: #043c4b; margin-bottom: 15px;">تواصل لطلب الخدمة</h3>
-            <p style="margin-bottom: 20px; color: #666;">اختر أحد ممثلي الدعم الفني للمتابعة:</p>
-            
-            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">
-                📱 تواصل مع الدعم (رقم 1)
-            </button>
-            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">
-                📱 تواصل مع الدعم (رقم 2)
-            </button>
-        </div>
-    </div>
-
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2>هل أنت جاهز للبدء؟</h2>
-            <p>تواصل معنا مباشرة عبر تيليجرام أو تابعنا على انستقرام.</p>
+            <h2>هل لديك استفسار؟</h2>
+            <p>فريقنا جاهز لمساعدتك في أي وقت.</p>
             <div class="contact-links">
                 <a href="https://t.me/net_pal" target="_blank" class="btn btn-primary">تيليجرام (@net_pal)</a>
                 <a href="https://instagram.com/net.pal22" target="_blank" class="btn btn-secondary">انستقرام (@net.pal22)</a>
@@ -109,98 +94,49 @@
             appId: "1:801260964399:web:d5d0b282e81c20144d14da"
         };
 
-        // أرقام الواتساب
-        const PHONE_1 = "963997804468"; 
-        const PHONE_2 = "963947810769"; 
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // متغيرات
-        let currentServiceTitle = "";
-        let currentServicePrice = "";
-        let currentServiceFeatures = "";
+        const container = document.getElementById('dynamic-services-container');
 
-        // محاولة تهيئة Firebase
-        try {
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-            const container = document.getElementById('dynamic-services-container');
-            const loadingMsg = document.getElementById('loading-msg');
+        // رقم الواتساب الخاص بك (بدون +)
+        const myWhatsappNumber = "963997804468"; // ضع رقمك هنا
 
-            db.collection("services").orderBy("timestamp", "desc").get().then((querySnapshot) => {
-                container.innerHTML = ""; // مسح رسالة التحميل
-                
-                if (querySnapshot.empty) {
-                    container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات حالياً.</p>";
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        const data = doc.data();
-                        
-                        // تجهيز الميزات
-                        let featuresHtml = '';
-                        let featuresText = '';
-                        if (data.features && Array.isArray(data.features)) {
-                            featuresHtml = '<ul class="features-list">';
-                            data.features.forEach(feat => {
-                                featuresHtml += `<li>✅ ${feat}</li>`;
-                                featuresText += `- ${feat}\n`;
-                            });
-                            featuresHtml += '</ul>';
-                        }
+        db.collection("services").orderBy("timestamp", "desc").get().then((querySnapshot) => {
+            container.innerHTML = ""; 
+            
+            if (querySnapshot.empty) {
+                container.innerHTML = "<p style='text-align:center; width:100%;'>قريباً...</p>";
+            } else {
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    
+                    // تجهيز رسالة الواتساب
+                    const message = `مرحباً، أريد الاستفسار عن خدمة: ${data.title} بسعر ${data.price}`;
+                    const whatsappLink = `https://wa.me/${myWhatsappNumber}?text=${encodeURIComponent(message)}`;
 
-                        // نصوص آمنة
-                        const safeTitle = (data.title || "").replace(/'/g, "\\'");
-                        const safeDesc = (featuresText || "").replace(/'/g, "\\'").replace(/\n/g, "%0A");
-
-                        const html = `
-                            <div class="service-card">
+                    const html = `
+                        <div class="service-card">
+                            <div class="card-header">
                                 <h3>${data.title}</h3>
-                                <p class="desc">${data.description || ""}</p>
-                                ${featuresHtml}
-                                <div class="price">السعر: ${data.price}</div>
-                                <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">اطلب الخدمة</button>
                             </div>
-                        `;
-                        container.innerHTML += html;
-                    });
-                }
-            }).catch((error) => {
-                console.error("Firebase Error:", error);
-                loadingMsg.innerHTML = "<span style='color:red'>حدث خطأ في تحميل الخدمات. تأكد من الإنترنت.</span>";
-            });
-
-        } catch (e) {
-            console.error("Init Error:", e);
-            document.getElementById('loading-msg').innerHTML = "خطأ في الاتصال بقاعدة البيانات.";
-        }
-
-        // دوال النافذة المنبثقة (Popup)
-        function openModal(title, price, features) {
-            currentServiceTitle = title;
-            currentServicePrice = price;
-            currentServiceFeatures = features;
-            document.getElementById('whatsappModal').style.display = "flex";
-        }
-
-        function closeModal() {
-            document.getElementById('whatsappModal').style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('whatsappModal')) {
-                closeModal();
+                            <div class="card-body">
+                                <p>${data.description}</p>
+                                <div class="price-tag">${data.price}</div>
+                                <a href="${whatsappLink}" target="_blank" class="btn-order">
+                                    <i class="fab fa-whatsapp"></i> اطلب الخدمة عبر واتساب
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
             }
-        }
-
-        function sendToWhatsapp(agent) {
-            let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
-            let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\n`;
-            text += `السعر: ${currentServicePrice}\n`;
-            if(currentServiceFeatures) {
-                text += `الميزات:\n${decodeURIComponent(currentServiceFeatures)}`;
-            }
-            let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
-            closeModal();
-        }
+        }).catch((error) => {
+            console.error("Error:", error);
+            container.innerHTML = "<p>خطأ في الاتصال.</p>";
+        });
     </script>
+
 </body>
 </html>
