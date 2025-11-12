@@ -215,5 +215,110 @@
             closeModal();
         }
     </script>
-</body>
-</html>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
+            authDomain: "netpal-f4cbf.firebaseapp.com",
+            projectId: "netpal-f4cbf",
+            storageBucket: "netpal-f4cbf.firebasestorage.app",
+            messagingSenderId: "801260964399",
+            appId: "1:801260964399:web:d5d0b282e81c20144d14da"
+        };
+
+        const PHONE_1 = "963997804468"; 
+        const PHONE_2 = "963947810769"; 
+        let currentServiceTitle = "", currentServicePrice = "", currentServiceFeatures = "";
+        const container = document.getElementById('dynamic-services-container');
+
+        // دالة رسم الخدمات (تستخدم للـ Firebase وللملف المحلي)
+        function renderServices(servicesList) {
+            container.innerHTML = "";
+            if (servicesList.length === 0) {
+                container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات حالياً.</p>";
+                return;
+            }
+            
+            servicesList.forEach(data => {
+                let featuresHtml = '';
+                let featuresText = '';
+                // التعامل مع الميزات سواء كانت من Firebase أو JSON
+                if (data.features && Array.isArray(data.features)) {
+                    featuresHtml = '<ul class="features-list">';
+                    data.features.forEach(feat => {
+                        featuresHtml += `<li>✅ ${feat}</li>`;
+                        featuresText += `- ${feat}\n`;
+                    });
+                    featuresHtml += '</ul>';
+                }
+
+                const safeTitle = (data.title || "").replace(/'/g, "\\'");
+                const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
+
+                const html = `
+                    <div class="service-card">
+                        <div class="card-header"><h3>${data.title}</h3></div>
+                        <div class="card-body">
+                            <p class="desc">${data.description || ""}</p>
+                            ${featuresHtml}
+                            <div class="price-tag">${data.price}</div>
+                            <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">اطلب الخدمة</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // محاولة الاتصال بـ Firebase أولاً
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+                const services = [];
+                querySnapshot.forEach((doc) => services.push(doc.data()));
+                renderServices(services);
+            }, (error) => {
+                // ⚠️ إذا فشل Firebase (بسبب الحظر أو VPN)، ننتقل للخطة البديلة
+                console.warn("فشل Firebase، جاري التحميل من الملف المحلي...", error);
+                loadLocalServices();
+            });
+
+        } catch (e) {
+            console.error("خطأ في تهيئة Firebase، الانتقال للمحلي.");
+            loadLocalServices();
+        }
+
+        // الخطة البديلة: تحميل البيانات من services.json
+        function loadLocalServices() {
+            fetch('services.json')
+                .then(response => response.json())
+                .then(data => {
+                    renderServices(data);
+                })
+                .catch(error => {
+                    container.innerHTML = "<p style='text-align:center; color:red;'>عذراً، حدث خطأ في تحميل الخدمات.</p>";
+                });
+        }
+
+        // --- النوافذ والواتساب ---
+        function openModal(title, price, features) {
+            currentServiceTitle = title;
+            currentServicePrice = price;
+            currentServiceFeatures = features;
+            document.getElementById('whatsappModal').style.display = "flex";
+        }
+        function closeModal() { document.getElementById('whatsappModal').style.display = "none"; }
+        window.onclick = function(event) { if (event.target == document.getElementById('whatsappModal')) closeModal(); }
+        function sendToWhatsapp(agent) {
+            let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
+            let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\nالسعر: ${currentServicePrice}\n`;
+            if(currentServiceFeatures) text += `\nتفاصيل:\n${decodeURIComponent(currentServiceFeatures)}`;
+            let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+            closeModal();
+        }
+    </script>
