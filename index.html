@@ -21,7 +21,7 @@
 <body>
 
     <header class="main-header">
-        <div class="container">
+        <div class="container header-container">
             <a href="index.html" class="logo-link">
                 <img src="images/logo.png" alt="شعار NetPal" class="logo-img">
                 <h1>NetPal</h1>
@@ -43,10 +43,11 @@
         </div>
     </section>
 
-    <div class="container" style="padding-top: 30px; padding-bottom: 20px;"> 
+    <div class="container slider-container-wrapper"> 
         <section class="hero-slider">
             <div class="slide" id="slide-1" style="background-image: url('images/hero-office.jpg');"></div>
             <div class="slide" id="slide-2" style="background-image: url('images/hero-abstract.jpg');"></div>
+            
             <div class="animated-logo-container">
                 <img src="images/logo-white.png" alt="NetPal Logo" class="animated-logo">
             </div>
@@ -58,7 +59,7 @@
             <h2>خدماتنا المميزة</h2>
             
             <div id="dynamic-services-container" class="services-grid">
-                <p style="text-align: center; width: 100%; font-size: 1.2rem;">جاري تحميل الخدمات...</p>
+                <p id="loading-msg" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري تحميل الخدمات...</p>
             </div>
         </div>
     </section>
@@ -67,11 +68,12 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
             <h3 style="color: #043c4b; margin-bottom: 15px;">تواصل لطلب الخدمة</h3>
-            <p style="margin-bottom: 20px; color: #666;">اختر أحد أرقام الدعم الفني للمتابعة:</p>
+            <p style="margin-bottom: 20px; color: #666;">اختر أحد ممثلي الدعم الفني للمتابعة:</p>
             
             <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">
                 📱 تواصل مع الدعم (رقم 1)
             </button>
+            
             <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">
                 📱 تواصل مع الدعم (رقم 2)
             </button>
@@ -112,20 +114,21 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ✅ أرقام الواتساب الخاصة بك
+        // ✅ أرقام الواتساب (تم وضعها كما طلبت)
         const PHONE_1 = "963997804468"; 
         const PHONE_2 = "963947810769"; 
 
-        // متغيرات لتخزين الخدمة المختارة
+        // متغيرات لحفظ بيانات الخدمة عند الضغط
         let currentServiceTitle = "";
         let currentServicePrice = "";
         let currentServiceFeatures = "";
 
         const container = document.getElementById('dynamic-services-container');
+        const loadingMsg = document.getElementById('loading-msg');
 
-        // جلب البيانات وعرضها
+        // جلب البيانات
         db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-            container.innerHTML = "";
+            container.innerHTML = ""; // تنظيف
             
             if (querySnapshot.empty) {
                 container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات حالياً.</p>";
@@ -133,26 +136,23 @@
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     
-                    // 1. تجهيز قائمة الميزات (HTML) للعرض في الموقع
+                    // 1. تجهيز الميزات كـ HTML للعرض
                     let featuresHtml = '';
-                    // 2. تجهيز نص الميزات (Text) لإرساله في الواتساب
-                    let featuresTextForWhatsapp = '';
+                    // 2. تجهيز الميزات كـ نص للواتساب
+                    let featuresText = '';
 
-                    if (data.features && Array.isArray(data.features) && data.features.length > 0) {
+                    if (data.features && Array.isArray(data.features)) {
                         featuresHtml = '<ul class="features-list">';
                         data.features.forEach(feat => {
-                            // عرض في الموقع
                             featuresHtml += `<li>✅ ${feat}</li>`;
-                            // نص للواتساب
-                            featuresTextForWhatsapp += `- ${feat}\n`;
+                            featuresText += `- ${feat}\n`;
                         });
                         featuresHtml += '</ul>';
                     }
 
-                    // تحويل النصوص لتكون آمنة داخل دالة الجافاسكريبت
+                    // تجهيز النصوص للدالة (حماية من الأقواس والفواصل)
                     const safeTitle = (data.title || "").replace(/'/g, "\\'");
-                    // هنا نستخدم النص الخاص بالواتساب وليس HTML
-                    const safeFeatures = featuresTextForWhatsapp.replace(/'/g, "\\'").replace(/\n/g, "%0A");
+                    const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
 
                     const html = `
                         <div class="service-card">
@@ -166,7 +166,7 @@
                                 
                                 <div class="price-tag">${data.price}</div>
                                 
-                                <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeFeatures}')">
+                                <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">
                                     اطلب الخدمة
                                 </button>
                             </div>
@@ -177,7 +177,11 @@
             }
         }, (error) => {
             console.error("Error:", error);
-            container.innerHTML = "<p style='text-align:center; color:red'>تأكد من إضافة رابط الموقع في إعدادات Firebase.</p>";
+            // رسالة تظهر على الموبايل إذا كان هناك مشكلة في الدومين
+            container.innerHTML = `<div style='text-align:center; color:red; padding:20px;'>
+                <p>حدث خطأ في تحميل الخدمات.</p>
+                <small>${error.code}: تأكد من إضافة الدومين في Firebase</small>
+            </div>`;
         });
 
         // --- دوال النافذة المنبثقة ---
@@ -185,7 +189,7 @@
         function openModal(title, price, features) {
             currentServiceTitle = title;
             currentServicePrice = price;
-            currentServiceFeatures = features; // هذه تحتوي على النص الجاهز للواتساب
+            currentServiceFeatures = features;
             document.getElementById('whatsappModal').style.display = "flex";
         }
 
@@ -193,17 +197,17 @@
             document.getElementById('whatsappModal').style.display = "none";
         }
 
+        // إغلاق عند الضغط في الخارج
         window.onclick = function(event) {
             if (event.target == document.getElementById('whatsappModal')) {
                 closeModal();
             }
         }
 
-        // --- دالة الإرسال للواتساب ---
+        // --- دالة الإرسال للواتساب (تختار الرقم حسب الزر) ---
         function sendToWhatsapp(agent) {
             let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
             
-            // تكوين الرسالة
             let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\n`;
             text += `السعر: ${currentServicePrice}\n`;
             
