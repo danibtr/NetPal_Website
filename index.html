@@ -4,24 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NetPal - نيتبال لخدمات الإنترنت</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T66Y8ENY24"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-T66Y8ENY24');
+    </script>
+
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* تنسيق صندوق الخطأ */
         #error-debug-box {
             background-color: #ffe6e6;
-            border: 2px solid red;
+            border: 2px solid #d8000c;
             color: #d8000c;
             padding: 15px;
-            margin: 20px;
+            margin: 20px auto;
             border-radius: 8px;
             text-align: left;
             direction: ltr;
             display: none; /* مخفي افتراضياً */
             font-family: monospace;
             font-size: 14px;
+            max-width: 90%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -103,7 +114,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // دالة لإظهار الخطأ على الشاشة
+        // دالة لإظهار رسالة الخطأ
         function showError(msg, detail) {
             const box = document.getElementById('error-debug-box');
             const container = document.getElementById('dynamic-services-container');
@@ -111,7 +122,7 @@
             box.style.display = 'block';
             box.innerHTML = `<strong>⚠️ حدث خطأ:</strong><br>${msg}<br><br><strong>التفاصيل التقنية:</strong><br>${detail}`;
             
-            container.innerHTML = ""; // إخفاء التحميل
+            container.innerHTML = ""; // إخفاء أيقونة التحميل
         }
 
         const firebaseConfig = {
@@ -132,10 +143,14 @@
             const db = firebase.firestore();
             const container = document.getElementById('dynamic-services-container');
 
+            // محاولة جلب البيانات
             db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+                // إخفاء صندوق الخطأ إذا نجح الاتصال
+                document.getElementById('error-debug-box').style.display = 'none';
                 container.innerHTML = "";
+
                 if (querySnapshot.empty) {
-                    container.innerHTML = "<p style='text-align:center; width:100%;'>نجح الاتصال، ولكن لا توجد خدمات مضافة حالياً.</p>";
+                    container.innerHTML = "<p style='text-align:center; width:100%; color:#666;'>نجح الاتصال، ولكن لا توجد خدمات مضافة حالياً.</p>";
                 } else {
                     querySnapshot.forEach((doc) => {
                         const data = doc.data();
@@ -167,10 +182,13 @@
                     });
                 }
             }, (error) => {
-                // هنا سيتم صيد الخطأ وعرضه
-                console.error(error);
+                // هنا يتم صيد الأخطاء وعرضها
+                console.error("Firebase Error:", error);
+                
                 if (error.code === 'permission-denied') {
-                    showError("تم رفض الوصول (Permission Denied).", "تأكد من أن قواعد البيانات (Rules) في Firebase تسمح بالقراءة للجميع: allow read: if true;");
+                    showError("تم رفض الوصول (Permission Denied).", "السبب: قواعد الأمان (Rules) تمنع القراءة، أو الدومين غير مسموح به.");
+                } else if (error.code === 'unavailable') {
+                    showError("الخدمة غير متاحة (Unavailable).", "تأكد من اتصال الإنترنت، أو قد تكون الخدمة محجوبة في منطقتك (جرب VPN).");
                 } else {
                     showError("فشل جلب البيانات.", error.message + " (Code: " + error.code + ")");
                 }
