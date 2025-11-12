@@ -59,7 +59,7 @@
             <h2>خدماتنا المميزة</h2>
             
             <div id="dynamic-services-container" class="services-grid">
-                <p id="loading-msg" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري تحميل الخدمات...</p>
+                <p id="loading-text" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري تحميل الخدمات...</p>
             </div>
         </div>
     </section>
@@ -73,7 +73,6 @@
             <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">
                 📱 تواصل مع الدعم (رقم 1)
             </button>
-            
             <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">
                 📱 تواصل مع الدعم (رقم 2)
             </button>
@@ -101,7 +100,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // إعدادات مشروعك
         const firebaseConfig = {
             apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
             authDomain: "netpal-f4cbf.firebaseapp.com",
@@ -111,80 +109,68 @@
             appId: "1:801260964399:web:d5d0b282e81c20144d14da"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // ✅ أرقام الواتساب (تم وضعها كما طلبت)
-        const PHONE_1 = "963997804468"; 
-        const PHONE_2 = "963947810769"; 
-
-        // متغيرات لحفظ بيانات الخدمة عند الضغط
-        let currentServiceTitle = "";
-        let currentServicePrice = "";
-        let currentServiceFeatures = "";
-
-        const container = document.getElementById('dynamic-services-container');
-        const loadingMsg = document.getElementById('loading-msg');
-
-        // جلب البيانات
-        db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-            container.innerHTML = ""; // تنظيف
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
             
-            if (querySnapshot.empty) {
-                container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات حالياً.</p>";
-            } else {
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    
-                    // 1. تجهيز الميزات كـ HTML للعرض
-                    let featuresHtml = '';
-                    // 2. تجهيز الميزات كـ نص للواتساب
-                    let featuresText = '';
+            const PHONE_1 = "963997804468"; 
+            const PHONE_2 = "963947810769"; 
 
-                    if (data.features && Array.isArray(data.features)) {
-                        featuresHtml = '<ul class="features-list">';
-                        data.features.forEach(feat => {
-                            featuresHtml += `<li>✅ ${feat}</li>`;
-                            featuresText += `- ${feat}\n`;
-                        });
-                        featuresHtml += '</ul>';
-                    }
+            let currentServiceTitle = "";
+            let currentServicePrice = "";
+            let currentServiceFeatures = "";
 
-                    // تجهيز النصوص للدالة (حماية من الأقواس والفواصل)
-                    const safeTitle = (data.title || "").replace(/'/g, "\\'");
-                    const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
+            const container = document.getElementById('dynamic-services-container');
 
-                    const html = `
-                        <div class="service-card">
-                            <div class="card-header">
-                                <h3>${data.title}</h3>
+            db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+                container.innerHTML = "";
+                if (querySnapshot.empty) {
+                    container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات مضافة حالياً.</p>";
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        
+                        let featuresHtml = '';
+                        let featuresText = '';
+                        if (data.features && Array.isArray(data.features)) {
+                            featuresHtml = '<ul class="features-list">';
+                            data.features.forEach(feat => {
+                                featuresHtml += `<li>✅ ${feat}</li>`;
+                                featuresText += `- ${feat}\n`;
+                            });
+                            featuresHtml += '</ul>';
+                        }
+
+                        const safeTitle = (data.title || "").replace(/'/g, "\\'");
+                        const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
+
+                        const html = `
+                            <div class="service-card">
+                                <div class="card-header"><h3>${data.title}</h3></div>
+                                <div class="card-body">
+                                    <p class="desc">${data.description || ""}</p>
+                                    ${featuresHtml}
+                                    <div class="price-tag">${data.price}</div>
+                                    <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">اطلب الخدمة</button>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p class="desc">${data.description || ""}</p>
-                                
-                                ${featuresHtml}
-                                
-                                <div class="price-tag">${data.price}</div>
-                                
-                                <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">
-                                    اطلب الخدمة
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += html;
-                });
-            }
-        }, (error) => {
-            console.error("Error:", error);
-            // رسالة تظهر على الموبايل إذا كان هناك مشكلة في الدومين
-            container.innerHTML = `<div style='text-align:center; color:red; padding:20px;'>
-                <p>حدث خطأ في تحميل الخدمات.</p>
-                <small>${error.code}: تأكد من إضافة الدومين في Firebase</small>
-            </div>`;
-        });
+                        `;
+                        container.innerHTML += html;
+                    });
+                }
+            }, (error) => {
+                console.error("Firebase Error:", error);
+                container.innerHTML = `
+                    <div style='text-align:center; color:red; padding:20px;'>
+                        <p>تعذر تحميل الخدمات.</p>
+                        <p style='font-size:0.8rem; color:#666;'>السبب المحتمل: إعدادات الأمان في Firebase تمنع هذا النطاق.</p>
+                    </div>`;
+            });
 
-        // --- دوال النافذة المنبثقة ---
+        } catch (e) {
+            console.error("Init Error:", e);
+            document.getElementById('loading-text').innerHTML = "خطأ في تهيئة التطبيق.";
+        }
 
         function openModal(title, price, features) {
             currentServiceTitle = title;
@@ -197,29 +183,23 @@
             document.getElementById('whatsappModal').style.display = "none";
         }
 
-        // إغلاق عند الضغط في الخارج
         window.onclick = function(event) {
             if (event.target == document.getElementById('whatsappModal')) {
                 closeModal();
             }
         }
 
-        // --- دالة الإرسال للواتساب (تختار الرقم حسب الزر) ---
         function sendToWhatsapp(agent) {
             let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
-            
             let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\n`;
             text += `السعر: ${currentServicePrice}\n`;
-            
             if(currentServiceFeatures) {
                 text += `\nتفاصيل الخدمة:\n${decodeURIComponent(currentServiceFeatures)}`;
             }
-            
             let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
             closeModal();
         }
     </script>
-
 </body>
 </html>
