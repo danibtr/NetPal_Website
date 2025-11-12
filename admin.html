@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم NetPal</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #333; }
+        .container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
+        h2 { color: #043c4b; text-align: center; margin-bottom: 1.5rem; }
+        input, button, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        textarea { height: 100px; resize: vertical; }
+        
+        .btn-add { background-color: #00c6c6; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-add:hover { background-color: #043c4b; }
+        
+        .btn-cancel { background-color: #777; color: white; border: none; display: none; margin-top: 5px; cursor: pointer; }
+
+        .service-item { background: #f9f9f9; border-right: 5px solid #00c6c6; padding: 15px; margin-bottom: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .service-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .service-actions button { padding: 5px 10px; margin-left: 5px; font-size: 14px; cursor: pointer; border: none; border-radius: 3px; color: white; }
+        .btn-edit { background-color: #ffa502; }
+        .btn-delete { background-color: #ff4757; }
+        
+        #dashboard { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen" class="container">
+        <h2>🔐 دخول المسؤول</h2>
+        <input type="email" id="email" placeholder="البريد الإلكتروني">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button class="btn-add" onclick="login()">دخول</button>
+    </div>
+
+    <div id="dashboard" class="container">
+        <h2 id="formTitle">⚙️ إضافة خدمة جديدة</h2>
+        
+        <input type="hidden" id="serviceId">
+        
+        <input type="text" id="serviceTitle" placeholder="عنوان الخدمة">
+        <input type="text" id="servicePrice" placeholder="السعر (مثلاً: $35)">
+        <textarea id="serviceDesc" placeholder="وصف قصير للخدمة (سطرين)"></textarea>
+        <textarea id="serviceFeatures" placeholder="قائمة الميزات (كل ميزة في سطر جديد)"></textarea>
+        
+        <button id="submitBtn" class="btn-add" onclick="saveService()">+ إضافة الخدمة</button>
+        <button id="cancelBtn" class="btn-cancel" onclick="resetForm()">إلغاء التعديل</button>
+        
+        <hr style="margin: 30px 0; border-color: #eee;">
+        <h3>الخدمات الحالية:</h3>
+        <div id="servicesList"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
+            authDomain: "netpal-f4cbf.firebaseapp.com",
+            projectId: "netpal-f4cbf",
+            storageBucket: "netpal-f4cbf.firebasestorage.app",
+            messagingSenderId: "801260964399",
+            appId: "1:801260964399:web:d5d0b282e81c20144d14da"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // مخزن مؤقت للبيانات لتسهيل التعديل
+        let cachedServices = {};
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    loadServices();
+                })
+                .catch(error => alert("خطأ: " + error.message));
+        }
+
+        function saveService() {
+            const id = document.getElementById('serviceId').value;
+            const title = document.getElementById('serviceTitle').value;
+            const price = document.getElementById('servicePrice').value;
+            const desc = document.getElementById('serviceDesc').value;
+            const featuresRaw = document.getElementById('serviceFeatures').value;
+            
+            const features = featuresRaw.split('\n').filter(item => item.trim() !== '');
+
+            if (!title || !price) { alert("أدخل العنوان والسعر على الأقل"); return; }
+
+            const data = {
+                title: title,
+                price: price,
+                description: desc,
+                features: features,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            const promise = id ? db.collection("services").doc(id).update(data) : db.collection("services").add(data);
+
+            promise.then(() => {
+                alert(id ? "تم التعديل!" : "تمت الإضافة!");
+                resetForm();
+                loadServices();
+            }).catch(error => alert("خطأ: " + error.message));
+        }
+
+        // دالة التجهيز للتعديل (النسخة الآمنة)
+        function prepareEdit(id) {
+            const data = cachedServices[id]; // جلب البيانات من الذاكرة
+            if (!data) return;
+
+            document.getElementById('formTitle').innerText = "تعديل الخدمة";
+            document.getElementById('submitBtn').innerText = "حفظ التعديلات";
+            document.getElementById('cancelBtn').style.display = "block";
+            
+            document.getElementById('serviceId').value = id;
+            document.getElementById('serviceTitle').value = data.title;
+            document.getElementById('servicePrice').value = data.price;
+            document.getElementById('serviceDesc').value = data.description || "";
+            document.getElementById('serviceFeatures').value = data.features ? data.features.join('\n') : '';
+            
+            window.scrollTo(0,0);
+        }
+
+        function resetForm() {
+            document.getElementById('formTitle').innerText = "⚙️ إضافة خدمة جديدة";
+            document.getElementById('submitBtn').innerText = "+ إضافة الخدمة";
+            document.getElementById('cancelBtn').style.display = "none";
+            document.getElementById('serviceId').value = "";
+            
+            document.getElementById('serviceTitle').value = "";
+            document.getElementById('servicePrice').value = "";
+            document.getElementById('serviceDesc').value = "";
+            document.getElementById('serviceFeatures').value = "";
+        }
+
+        function loadServices() {
+            const list = document.getElementById('servicesList');
+            list.innerHTML = "جاري التحميل...";
+            
+            db.collection("services").orderBy("timestamp", "desc").get().then((querySnapshot) => {
+                list.innerHTML = "";
+                cachedServices = {}; // تصفير الذاكرة
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    cachedServices[doc.id] = data; // حفظ البيانات برقم الهوية
+
+                    list.innerHTML += `
+                        <div class="service-item">
+                            <div class="service-header">
+                                <div>
+                                    <strong style="font-size:1.2em">${data.title}</strong>
+                                    <span style="color:#00c6c6; font-weight:bold"> (${data.price})</span>
+                                </div>
+                                <div class="service-actions">
+                                    <button class="btn-edit" onclick="prepareEdit('${doc.id}')">تعديل</button>
+                                    <button class="btn-delete" onclick="deleteService('${doc.id}')">حذف</button>
+                                </div>
+                            </div>
+                            <p style="color:#666; margin:0">${data.description}</p>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function deleteService(id) {
+            if(confirm('هل أنت متأكد من الحذف؟')) {
+                db.collection("services").doc(id).delete().then(() => loadServices());
+            }
+        }
+    </script>
+</body>
+</html>
