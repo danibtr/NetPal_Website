@@ -14,7 +14,6 @@
     </script>
 
     <link rel="stylesheet" href="style.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
@@ -39,8 +38,8 @@
     <section class="hero-welcome-text">
         <div class="container">
             <h2>أهلاً بكم في نيتبال</h2>
-            <p>شريكك الرقمي للنجاح والنمو عبر الإنترنت.</p>
-            <a href="#services" class="btn btn-primary-dark">تصفح الخدمات</a>
+            <p>نقدم خدمات انترنت متنوعة ونساعدك في كسب المال من الإنترنت.</p>
+            <a href="#services" class="btn btn-primary-dark">استكشف خدماتنا</a>
         </div>
     </section>
 
@@ -56,18 +55,33 @@
 
     <section id="services" class="services-section">
         <div class="container">
-            <h2>باقاتنا وخدماتنا</h2>
+            <h2>خدماتنا المميزة</h2>
             
             <div id="dynamic-services-container" class="services-grid">
-                <div class="loading-spinner">جاري تحميل الخدمات...</div>
+                <p style="text-align: center; width: 100%; font-size: 1.2rem;">جاري تحميل الخدمات...</p>
             </div>
         </div>
     </section>
 
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 style="color: #043c4b; margin-bottom: 15px;">تواصل لطلب الخدمة</h3>
+            <p style="margin-bottom: 20px; color: #666;">اختر أحد أرقام الدعم الفني للمتابعة:</p>
+            
+            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">
+                📱 تواصل مع الدعم (رقم 1)
+            </button>
+            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">
+                📱 تواصل مع الدعم (رقم 2)
+            </button>
+        </div>
+    </div>
+
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2>هل لديك استفسار؟</h2>
-            <p>فريقنا جاهز لمساعدتك في أي وقت.</p>
+            <h2>هل أنت جاهز للبدء؟</h2>
+            <p>تواصل معنا مباشرة عبر تيليجرام أو تابعنا على انستقرام.</p>
             <div class="contact-links">
                 <a href="https://t.me/net_pal" target="_blank" class="btn btn-primary">تيليجرام (@net_pal)</a>
                 <a href="https://instagram.com/net.pal22" target="_blank" class="btn btn-secondary">انستقرام (@net.pal22)</a>
@@ -85,6 +99,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
+        // إعدادات مشروعك
         const firebaseConfig = {
             apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
             authDomain: "netpal-f4cbf.firebaseapp.com",
@@ -97,23 +112,47 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // ✅ أرقام الواتساب الخاصة بك
+        const PHONE_1 = "963997804468"; 
+        const PHONE_2 = "963947810769"; 
+
+        // متغيرات لتخزين الخدمة المختارة
+        let currentServiceTitle = "";
+        let currentServicePrice = "";
+        let currentServiceFeatures = "";
+
         const container = document.getElementById('dynamic-services-container');
 
-        // رقم الواتساب الخاص بك (بدون +)
-        const myWhatsappNumber = "963997804468"; // ضع رقمك هنا
-
-        db.collection("services").orderBy("timestamp", "desc").get().then((querySnapshot) => {
-            container.innerHTML = ""; 
+        // جلب البيانات وعرضها
+        db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+            container.innerHTML = "";
             
             if (querySnapshot.empty) {
-                container.innerHTML = "<p style='text-align:center; width:100%;'>قريباً...</p>";
+                container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات حالياً.</p>";
             } else {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     
-                    // تجهيز رسالة الواتساب
-                    const message = `مرحباً، أريد الاستفسار عن خدمة: ${data.title} بسعر ${data.price}`;
-                    const whatsappLink = `https://wa.me/${myWhatsappNumber}?text=${encodeURIComponent(message)}`;
+                    // 1. تجهيز قائمة الميزات (HTML) للعرض في الموقع
+                    let featuresHtml = '';
+                    // 2. تجهيز نص الميزات (Text) لإرساله في الواتساب
+                    let featuresTextForWhatsapp = '';
+
+                    if (data.features && Array.isArray(data.features) && data.features.length > 0) {
+                        featuresHtml = '<ul class="features-list">';
+                        data.features.forEach(feat => {
+                            // عرض في الموقع
+                            featuresHtml += `<li>✅ ${feat}</li>`;
+                            // نص للواتساب
+                            featuresTextForWhatsapp += `- ${feat}\n`;
+                        });
+                        featuresHtml += '</ul>';
+                    }
+
+                    // تحويل النصوص لتكون آمنة داخل دالة الجافاسكريبت
+                    const safeTitle = (data.title || "").replace(/'/g, "\\'");
+                    // هنا نستخدم النص الخاص بالواتساب وليس HTML
+                    const safeFeatures = featuresTextForWhatsapp.replace(/'/g, "\\'").replace(/\n/g, "%0A");
 
                     const html = `
                         <div class="service-card">
@@ -121,21 +160,61 @@
                                 <h3>${data.title}</h3>
                             </div>
                             <div class="card-body">
-                                <p>${data.description}</p>
+                                <p class="desc">${data.description || ""}</p>
+                                
+                                ${featuresHtml}
+                                
                                 <div class="price-tag">${data.price}</div>
-                                <a href="${whatsappLink}" target="_blank" class="btn-order">
-                                    <i class="fab fa-whatsapp"></i> اطلب الخدمة عبر واتساب
-                                </a>
+                                
+                                <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeFeatures}')">
+                                    اطلب الخدمة
+                                </button>
                             </div>
                         </div>
                     `;
                     container.innerHTML += html;
                 });
             }
-        }).catch((error) => {
+        }, (error) => {
             console.error("Error:", error);
-            container.innerHTML = "<p>خطأ في الاتصال.</p>";
+            container.innerHTML = "<p style='text-align:center; color:red'>تأكد من إضافة رابط الموقع في إعدادات Firebase.</p>";
         });
+
+        // --- دوال النافذة المنبثقة ---
+
+        function openModal(title, price, features) {
+            currentServiceTitle = title;
+            currentServicePrice = price;
+            currentServiceFeatures = features; // هذه تحتوي على النص الجاهز للواتساب
+            document.getElementById('whatsappModal').style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('whatsappModal').style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('whatsappModal')) {
+                closeModal();
+            }
+        }
+
+        // --- دالة الإرسال للواتساب ---
+        function sendToWhatsapp(agent) {
+            let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
+            
+            // تكوين الرسالة
+            let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\n`;
+            text += `السعر: ${currentServicePrice}\n`;
+            
+            if(currentServiceFeatures) {
+                text += `\nتفاصيل الخدمة:\n${decodeURIComponent(currentServiceFeatures)}`;
+            }
+            
+            let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+            closeModal();
+        }
     </script>
 
 </body>
