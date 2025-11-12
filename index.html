@@ -4,20 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NetPal - نيتبال لخدمات الإنترنت</title>
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T66Y8ENY24"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-T66Y8ENY24');
-    </script>
-
     <link rel="stylesheet" href="style.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* تنسيق صندوق الخطأ */
+        #error-debug-box {
+            background-color: #ffe6e6;
+            border: 2px solid red;
+            color: #d8000c;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            text-align: left;
+            direction: ltr;
+            display: none; /* مخفي افتراضياً */
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
@@ -48,7 +54,6 @@
         <section class="hero-slider">
             <div class="slide" id="slide-1" style="background-image: url('images/hero-office.jpg');"></div>
             <div class="slide" id="slide-2" style="background-image: url('images/hero-abstract.jpg');"></div>
-            
             <div class="animated-logo-container">
                 <img src="images/logo-white.png" alt="NetPal Logo" class="animated-logo">
             </div>
@@ -59,8 +64,10 @@
         <div class="container">
             <h2>خدماتنا المميزة</h2>
             
+            <div id="error-debug-box"></div>
+
             <div id="dynamic-services-container" class="services-grid">
-                <p id="loading-msg" style="text-align: center; width: 100%; font-size: 1.2rem; color:#555;">جاري تحميل الخدمات...</p>
+                <p id="loading-text" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري الاتصال بقاعدة البيانات...</p>
             </div>
         </div>
     </section>
@@ -70,13 +77,8 @@
             <span class="close-modal" onclick="closeModal()">&times;</span>
             <h3 style="color: #043c4b; margin-bottom: 15px;">تواصل لطلب الخدمة</h3>
             <p style="margin-bottom: 20px; color: #666;">اختر أحد ممثلي الدعم الفني للمتابعة:</p>
-            
-            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">
-                📱 تواصل مع الدعم (رقم 1)
-            </button>
-            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">
-                📱 تواصل مع الدعم (رقم 2)
-            </button>
+            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">📱 تواصل مع الدعم (رقم 1)</button>
+            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">📱 تواصل مع الدعم (رقم 2)</button>
         </div>
     </div>
 
@@ -101,7 +103,17 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // إعدادات مشروعك (NetPal)
+        // دالة لإظهار الخطأ على الشاشة
+        function showError(msg, detail) {
+            const box = document.getElementById('error-debug-box');
+            const container = document.getElementById('dynamic-services-container');
+            
+            box.style.display = 'block';
+            box.innerHTML = `<strong>⚠️ حدث خطأ:</strong><br>${msg}<br><br><strong>التفاصيل التقنية:</strong><br>${detail}`;
+            
+            container.innerHTML = ""; // إخفاء التحميل
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
             authDomain: "netpal-f4cbf.firebaseapp.com",
@@ -111,38 +123,25 @@
             appId: "1:801260964399:web:d5d0b282e81c20144d14da"
         };
 
-        // تهيئة Firebase
+        const PHONE_1 = "963997804468"; 
+        const PHONE_2 = "963947810769"; 
+        let currentServiceTitle = "", currentServicePrice = "", currentServiceFeatures = "";
+
         try {
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
-
-            // ✅ أرقام الواتساب الخاصة بك
-            const PHONE_1 = "963997804468"; 
-            const PHONE_2 = "963947810769"; 
-
-            // متغيرات لتخزين الخدمة المختارة
-            let currentServiceTitle = "";
-            let currentServicePrice = "";
-            let currentServiceFeatures = "";
-
             const container = document.getElementById('dynamic-services-container');
 
-            // جلب الخدمات (مراقبة فورية)
             db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-                container.innerHTML = ""; // مسح رسالة التحميل
-                
+                container.innerHTML = "";
                 if (querySnapshot.empty) {
-                    container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات مضافة حالياً.</p>";
+                    container.innerHTML = "<p style='text-align:center; width:100%;'>نجح الاتصال، ولكن لا توجد خدمات مضافة حالياً.</p>";
                 } else {
                     querySnapshot.forEach((doc) => {
                         const data = doc.data();
-                        
-                        // تجهيز الميزات (قائمة HTML)
                         let featuresHtml = '';
-                        // تجهيز الميزات (نص للواتساب)
                         let featuresText = '';
-                        
-                        if (data.features && Array.isArray(data.features) && data.features.length > 0) {
+                        if (data.features && Array.isArray(data.features)) {
                             featuresHtml = '<ul class="features-list">';
                             data.features.forEach(feat => {
                                 featuresHtml += `<li>✅ ${feat}</li>`;
@@ -150,26 +149,17 @@
                             });
                             featuresHtml += '</ul>';
                         }
-
-                        // حماية النصوص
                         const safeTitle = (data.title || "").replace(/'/g, "\\'");
                         const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
 
                         const html = `
                             <div class="service-card">
-                                <div class="card-header">
-                                    <h3>${data.title}</h3>
-                                </div>
+                                <div class="card-header"><h3>${data.title}</h3></div>
                                 <div class="card-body">
                                     <p class="desc">${data.description || ""}</p>
-                                    
                                     ${featuresHtml}
-                                    
                                     <div class="price-tag">${data.price}</div>
-                                    
-                                    <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">
-                                        اطلب الخدمة
-                                    </button>
+                                    <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">اطلب الخدمة</button>
                                 </div>
                             </div>
                         `;
@@ -177,56 +167,35 @@
                     });
                 }
             }, (error) => {
-                // في حال حدوث خطأ (مثل عدم السماح بالدومين)
-                console.error("Firebase Error:", error);
-                container.innerHTML = `
-                    <div style='text-align:center; color:red; padding:20px; border:1px solid red; background:#fff0f0; border-radius:10px; width:100%;'>
-                        <h3>⚠️ لم تظهر الخدمات</h3>
-                        <p style="margin:10px 0;">السبب المحتمل: <b>${error.code}</b></p>
-                        <p style='font-size:0.9rem; color:#333;'>
-                            يجب إضافة <b>danibtr.github.io</b> في إعدادات Firebase:<br>
-                            Authentication > Settings > Authorized Domains
-                        </p>
-                    </div>`;
+                // هنا سيتم صيد الخطأ وعرضه
+                console.error(error);
+                if (error.code === 'permission-denied') {
+                    showError("تم رفض الوصول (Permission Denied).", "تأكد من أن قواعد البيانات (Rules) في Firebase تسمح بالقراءة للجميع: allow read: if true;");
+                } else {
+                    showError("فشل جلب البيانات.", error.message + " (Code: " + error.code + ")");
+                }
             });
 
         } catch (e) {
-            console.error("Init Error:", e);
-            document.getElementById('loading-msg').innerText = "خطأ في الاتصال بالموقع.";
+            showError("خطأ في تهيئة الموقع.", e.message);
         }
 
-        // --- دوال النافذة المنبثقة ---
         function openModal(title, price, features) {
             currentServiceTitle = title;
             currentServicePrice = price;
             currentServiceFeatures = features;
             document.getElementById('whatsappModal').style.display = "flex";
         }
-
-        function closeModal() {
-            document.getElementById('whatsappModal').style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('whatsappModal')) {
-                closeModal();
-            }
-        }
-
+        function closeModal() { document.getElementById('whatsappModal').style.display = "none"; }
+        window.onclick = function(event) { if (event.target == document.getElementById('whatsappModal')) closeModal(); }
         function sendToWhatsapp(agent) {
             let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
-            
-            let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\n`;
-            text += `السعر: ${currentServicePrice}\n`;
-            if(currentServiceFeatures) {
-                text += `\nتفاصيل الخدمة:\n${decodeURIComponent(currentServiceFeatures)}`;
-            }
-            
+            let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\nالسعر: ${currentServicePrice}\n`;
+            if(currentServiceFeatures) text += `\nتفاصيل:\n${decodeURIComponent(currentServiceFeatures)}`;
             let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
             closeModal();
         }
     </script>
-
 </body>
 </html>
