@@ -21,29 +21,10 @@
     </script>
 
     <link rel="stylesheet" href="style.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* تنسيق الهيدر */
-        .logo-link { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        .logo-img { width: 65px; height: 65px; object-fit: contain; margin: 0; }
-        .logo-link h1 { font-size: 2rem; color: #043c4b; margin: 0; font-weight: 800; line-height: 1; padding-top: 5px; }
-        
-        /* تنسيق زر فيسبوك */
-        .btn-facebook {
-            background-color: transparent !important; 
-            border: 2px solid white !important; 
-            color: white !important;
-        }
-        .btn-facebook:hover { 
-            background-color: #00c6c6 !important; 
-            border-color: #00c6c6 !important;
-            color: #043c4b !important;
-            transform: translateY(-3px); 
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -53,6 +34,7 @@
                 <img src="images/logo.png" alt="شعار NetPal" class="logo-img">
                 <h1>NetPal</h1>
             </a>
+            
             <nav class="main-nav">
                 <ul>
                     <li><a href="#services">خدماتنا</a></li>
@@ -123,6 +105,18 @@
         </div>
     </section>
 
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 style="color: #043c4b; margin-bottom: 15px;">
+                <i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> تواصل لطلب الخدمة
+            </h3>
+            <p style="margin-bottom: 20px; color: #666;">اختر أحد ممثلي الدعم الفني للمتابعة:</p>
+            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">📱 تواصل مع الدعم (رقم 1)</button>
+            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">📱 تواصل مع الدعم (رقم 2)</button>
+        </div>
+    </div>
+
     <section id="contact" class="contact-section">
         <div class="container">
             <h2>تابعنا على منصاتنا</h2>
@@ -177,8 +171,6 @@
 
                     const safeTitle = (service.title || "").replace(/'/g, "\\'");
                     const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
-                    
-                    // ✅ التعديل هنا: يقبل أي كلاس أيقونة (fa-solid أو fa-brands)
                     const iconClass = service.icon || "fa-solid fa-cube";
 
                     const html = `

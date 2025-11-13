@@ -4,7 +4,11 @@
     --color-bright-cyan: #00c6c6; 
     --color-white: #ffffff;
     --color-bg: #f8f9fa;
-    --font-main: 'Tajawal', sans-serif;
+    --font-main: 'Baloo Bhaijaan 2', cursive; 
+    --gradient-start: #0f9b8e;
+    --gradient-end: #00c6c6;
+    --feature-list-bg: #e0fafa;
+    --price-color: #008f8e;
 }
 
 body {
@@ -19,30 +23,49 @@ body {
     margin: 0 auto; padding: 0 15px;
 }
 
-/* الهيدر */
+/* --- الهيدر --- */
 .main-header {
     background: var(--color-white);
-    padding: 10px 0;
+    padding: 15px 0; /* زيادة الحشو للكمبيوتر */
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     position: sticky; top: 0; z-index: 1000;
 }
 .header-container { display: flex; justify-content: space-between; align-items: center; }
-.logo-link { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-.logo-img { width: 65px; height: 65px; object-fit: contain; margin: 0; }
-.logo-link h1 { font-size: 2rem; color: #043c4b; margin: 0; font-weight: 800; line-height: 1; padding-top: 5px; }
+
+/* ✅ تنسيق اللوجو الجديد للكمبيوتر ✅ */
+.logo-link { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; /* مسافة متناسقة بين الصورة والاسم */
+    text-decoration: none; 
+}
+.logo-img { 
+    width: 80px; /* حجم ممتاز للكمبيوتر */
+    height: 80px; 
+    object-fit: contain; 
+    margin: 0;
+}
+.logo-link h1 { 
+    font-size: 2.2rem; /* خط كبير وعريض للاسم */
+    color: var(--color-dark-teal); 
+    margin: 0; 
+    font-weight: 800; 
+    line-height: 1;
+    padding-top: 8px; /* لضبط المحاذاة مع الصورة */
+}
 
 .main-nav ul { display: flex; list-style: none; padding: 0; margin: 0; }
 .main-nav li { margin-right: 20px; }
-.main-nav a { text-decoration: none; color: #555; font-weight: bold; transition: 0.3s; font-size: 16px; }
+.main-nav a { text-decoration: none; color: #555; font-weight: 700; transition: 0.3s; font-size: 18px; }
 .main-nav a:hover { color: var(--color-bright-cyan); }
 
-/* الترحيب */
+/* --- الترحيب --- */
 .hero-welcome-text {
     background: var(--color-white); text-align: center; padding: 60px 0;
     border-bottom: 1px solid #eee;
 }
-.hero-welcome-text h2 { font-size: 2.5rem; color: var(--color-dark-teal); margin-bottom: 15px; }
-.hero-welcome-text p { font-size: 1.2rem; color: #777; margin-bottom: 30px; }
+.hero-welcome-text h2 { font-size: 2.5rem; color: var(--color-dark-teal); margin-bottom: 15px; font-weight: 700; }
+.hero-welcome-text p { font-size: 1.3rem; color: #777; margin-bottom: 30px; font-weight: 500; }
 
 .btn-primary-dark {
     background: var(--color-dark-teal); color: var(--color-white);
@@ -51,7 +74,7 @@ body {
 }
 .btn-primary-dark:hover { background: var(--color-bright-cyan); color: var(--color-dark-teal); }
 
-/* السلايدر */
+/* --- السلايدر --- */
 .slider-container-wrapper { padding-top: 20px; padding-bottom: 20px; }
 .hero-slider {
     position: relative; overflow: hidden; padding-top: 50%; background: #222;
@@ -71,7 +94,7 @@ body {
 }
 .animated-logo { width: 600px; max-width: 80%; animation: pulse 3s infinite alternate; }
 
-/* الخدمات */
+/* --- الخدمات --- */
 .services-section { padding: 80px 0; }
 .section-header { text-align: center; margin-bottom: 50px; }
 .section-header h2 { font-size: 2.2rem; color: var(--color-dark-teal); margin-bottom: 10px; }
@@ -85,39 +108,39 @@ body {
     box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #eee;
     display: flex; flex-direction: column; justify-content: flex-start; 
 }
-.service-card:hover { transform: translateY(-10px); border-color: var(--color-bright-cyan); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+.service-card:hover { transform: translateY(-10px); border-color: var(--gradient-end); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
 
 .card-header {
-    background: linear-gradient(135deg, var(--color-dark-teal), #065a6e);
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
     padding: 25px 20px; color: white; text-align: center; position: relative;
 }
 .service-icon-wrapper { font-size: 40px; margin-bottom: 10px; color: rgba(255,255,255,0.9); }
-.service-card h3 { margin: 0; font-size: 1.4rem; }
+.service-card h3 { margin: 0; font-size: 1.4rem; font-weight: 700; }
 
 .card-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-start; }
 .service-card p.desc { font-size: 1rem; color: #666; margin-bottom: 20px; min-height: 40px; }
 
 .features-list {
     list-style: none; padding: 0; text-align: right;
-    background: #f4fcfc; padding: 15px; border-radius: 10px; margin-bottom: 20px;
+    background: var(--feature-list-bg); padding: 15px; border-radius: 10px; margin-bottom: 20px;
     border: 1px solid #e0f7fa; flex-grow: 1;
 }
-.features-list li { margin-bottom: 8px; font-size: 14px; color: #444; display: flex; align-items: baseline; }
+.features-list li { margin-bottom: 8px; font-size: 14px; color: #444; display: flex; align-items: baseline; font-weight: 500; }
 .features-list li i { margin-left: 8px; }
 
 .price-tag {
-    font-size: 1.6rem; font-weight: 800; color: var(--color-bright-cyan);
+    font-size: 1.6rem; font-weight: 800; color: var(--price-color);
     text-align: center; margin: 10px 0 20px 0;
 }
 
 .btn-main {
-    background-color: var(--color-dark-teal); color: white;
-    padding: 14px; border: none; border-radius: 8px; font-size: 16px;
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+    color: white; padding: 14px; border: none; border-radius: 8px; font-size: 16px;
     font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;
 }
-.btn-main:hover { background-color: var(--color-bright-cyan); color: var(--color-dark-teal); }
+.btn-main:hover { background: linear-gradient(90deg, var(--gradient-end), var(--gradient-start)); opacity: 0.95; }
 
-/* لماذا نحن */
+/* --- لماذا نحن --- */
 .features-section { padding: 60px 0; background-color: #fff; }
 .features-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px;
@@ -131,50 +154,21 @@ body {
 .feature-box h3 { color: var(--color-dark-teal); margin-bottom: 15px; }
 .feature-box p { color: #666; line-height: 1.6; }
 
-/* التواصل والفوتر (إصلاح الترتيب) */
+/* التواصل والفوتر */
 .contact-section { background: var(--color-dark-teal); color: white; padding: 80px 0; text-align: center; }
+.contact-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 30px; }
 
-/* ✅ إصلاح مشكلة الأيقونات الملتصقة ✅ */
-.contact-links {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap; /* يسمح بالنزول للسطر التالي إذا ضاقت الشاشة */
-    gap: 15px; /* مسافة بين الأزرار */
-    margin-top: 30px;
-}
-
-/* تنسيق الزر الموحد */
 .contact-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: transparent;
-    border: 2px solid white;
-    color: white;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    min-width: 160px; /* عرض موحد */
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background-color: transparent; border: 2px solid white; color: white;
+    padding: 12px 30px; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
+    text-decoration: none; transition: all 0.3s ease; min-width: 160px;
 }
-
 .contact-btn:hover { 
-    background-color: #00c6c6; 
-    border-color: #00c6c6;
-    color: #043c4b;
-    transform: translateY(-5px); 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background-color: #00c6c6; border-color: #00c6c6; color: #043c4b;
+    transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
-
-/* زر فيسبوك خاص (عند التحويم) */
-.btn-facebook:hover { 
-    background-color: #00c6c6; /* نفس اللون لتوحيد الهوية */
-    border-color: #00c6c6;
-    color: #043c4b;
-}
+.btn-facebook:hover { background-color: #00c6c6 !important; border-color: #00c6c6 !important; color: #043c4b !important; }
 
 .main-footer { background: #222; color: #888; text-align: center; padding: 30px; font-size: 0.9rem; }
 
@@ -191,66 +185,29 @@ body {
 }
 @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.05)} }
 
-/* تحسينات الموبايل النهائية */
+/* --- الموبايل (كما أحببت) --- */
 @media (max-width: 768px) {
-    /* 1. إلغاء تثبيت الهيدر وتقليل ارتفاعه */
-    .main-header {
-        position: relative !important; /* تجعل الهيدر يختفي عند النزول */
-        padding: 5px 0 !important; /* تقليل الارتفاع */
-        box-shadow: 0 1px 5px rgba(0,0,0,0.05); /* ظل خفيف جداً */
-    }
+    .main-header { position: relative !important; padding: 5px 0 !important; box-shadow: 0 1px 5px rgba(0,0,0,0.05); }
+    .header-container { flex-direction: column; gap: 5px; }
+    
+    /* اللوجو فوق الاسم */
+    .logo-link { flex-direction: column; align-items: center; margin-bottom: 5px; gap: 0; }
+    .logo-img { margin: 0; width: 90px; height: 90px; }
+    .logo-link h1 { font-size: 1.8rem; margin: 0; line-height: 1.2; }
 
-    /* 2. ترتيب العناصر (اللوجو والاسم) */
-    .header-container { 
-        flex-direction: column; 
-        gap: 5px;
-    }
-    
-    .logo-link { 
-        margin-bottom: 5px; 
-        gap: 8px; /* تقليل المسافة بين اللوجو والاسم */
-    }
-    
-    .logo-img { 
-        width: 50px !important; /* تصغير اللوجو قليلاً ليتناسب */
-        height: 50px !important; 
-    }
-    
-    .logo-link h1 { 
-        font-size: 1.6rem !important; /* تصغير الاسم قليلاً */
-    }
-
-    /* 3. القائمة الأفقية (جنب بعض) */
     .main-nav ul { 
-        flex-direction: row !important; /* جعلها أفقية */
-        justify-content: center; 
-        align-items: center;
-        padding: 5px 0; 
-        width: 100%; 
-        gap: 15px; /* مسافة بين الكلمات */
-        border-top: 1px solid #f0f0f0; /* خط فاصل خفيف جداً */
-        margin-top: 5px;
+        flex-direction: row !important; justify-content: center; align-items: center;
+        padding: 5px 0; width: 100%; gap: 15px; border-top: 1px solid #f0f0f0; margin-top: 5px;
     }
+    .main-nav li { margin: 0 !important; width: auto !important; }
+    .main-nav a { display: inline-block; width: auto !important; padding: 5px 10px !important; background-color: transparent !important; font-size: 0.95rem !important; color: #555 !important; }
     
-    .main-nav li { 
-        margin: 0 !important; 
-        width: auto !important; /* عرض تلقائي */
-    }
-    
-    .main-nav a {
-        display: inline-block;
-        width: auto !important;
-        padding: 5px 10px !important; /* تقليل الحشو */
-        background-color: transparent !important; /* إزالة الخلفية الرمادية */
-        font-size: 0.9rem !important; /* تصغير الخط */
-        color: #555 !important;
-    }
-    
-    /* تحسينات عامة أخرى */
     .hero-welcome-text h2 { font-size: 1.8rem; }
     .services-grid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
     .service-card { width: 90%; max-width: 350px; }
     .hero-slider { padding-top: 60%; border-radius: 0; }
     div.container.slider-container-wrapper { padding: 0 !important; }
     .animated-logo { width: 180px; }
+    .contact-links { flex-direction: column; align-items: center; gap: 10px; }
+    .contact-btn { width: 80%; }
 }
