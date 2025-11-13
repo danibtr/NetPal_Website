@@ -5,10 +5,6 @@
     --color-white: #ffffff;
     --color-bg: #f8f9fa;
     --font-main: 'Tajawal', sans-serif;
-    --gradient-start: #0f9b8e;
-    --gradient-end: #00c6c6;
-    --feature-list-bg: #e0fafa;
-    --price-color: #008f8e;
 }
 
 body {
@@ -31,9 +27,10 @@ body {
     position: sticky; top: 0; z-index: 1000;
 }
 .header-container { display: flex; justify-content: space-between; align-items: center; }
-.logo-link { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--color-dark-teal); }
-.logo-img { width: 70px; height: 70px; object-fit: contain; margin: 0; }
-.logo-link h1 { font-size: 2.2rem; color: var(--color-dark-teal); margin: 0; font-weight: 800; line-height: 1; }
+.logo-link { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+.logo-img { width: 65px; height: 65px; object-fit: contain; margin: 0; }
+.logo-link h1 { font-size: 2rem; color: #043c4b; margin: 0; font-weight: 800; line-height: 1; padding-top: 5px; }
+
 .main-nav ul { display: flex; list-style: none; padding: 0; margin: 0; }
 .main-nav li { margin-right: 20px; }
 .main-nav a { text-decoration: none; color: #555; font-weight: bold; transition: 0.3s; font-size: 16px; }
@@ -88,10 +85,10 @@ body {
     box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #eee;
     display: flex; flex-direction: column; justify-content: flex-start; 
 }
-.service-card:hover { transform: translateY(-10px); border-color: var(--gradient-end); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+.service-card:hover { transform: translateY(-10px); border-color: var(--color-bright-cyan); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
 
 .card-header {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background: linear-gradient(135deg, var(--color-dark-teal), #065a6e);
     padding: 25px 20px; color: white; text-align: center; position: relative;
 }
 .service-icon-wrapper { font-size: 40px; margin-bottom: 10px; color: rgba(255,255,255,0.9); }
@@ -102,23 +99,23 @@ body {
 
 .features-list {
     list-style: none; padding: 0; text-align: right;
-    background: var(--feature-list-bg); padding: 15px; border-radius: 10px; margin-bottom: 20px;
+    background: #f4fcfc; padding: 15px; border-radius: 10px; margin-bottom: 20px;
     border: 1px solid #e0f7fa; flex-grow: 1;
 }
 .features-list li { margin-bottom: 8px; font-size: 14px; color: #444; display: flex; align-items: baseline; }
 .features-list li i { margin-left: 8px; }
 
 .price-tag {
-    font-size: 1.6rem; font-weight: 800; color: var(--price-color);
+    font-size: 1.6rem; font-weight: 800; color: var(--color-bright-cyan);
     text-align: center; margin: 10px 0 20px 0;
 }
 
 .btn-main {
-    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
-    color: white; padding: 14px; border: none; border-radius: 8px; font-size: 16px;
+    background-color: var(--color-dark-teal); color: white;
+    padding: 14px; border: none; border-radius: 8px; font-size: 16px;
     font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;
 }
-.btn-main:hover { background: linear-gradient(90deg, var(--gradient-end), var(--gradient-start)); opacity: 0.95; }
+.btn-main:hover { background-color: var(--color-bright-cyan); color: var(--color-dark-teal); }
 
 /* لماذا نحن */
 .features-section { padding: 60px 0; background-color: #fff; }
@@ -134,12 +131,51 @@ body {
 .feature-box h3 { color: var(--color-dark-teal); margin-bottom: 15px; }
 .feature-box p { color: #666; line-height: 1.6; }
 
-/* التواصل والفوتر */
+/* التواصل والفوتر (إصلاح الترتيب) */
 .contact-section { background: var(--color-dark-teal); color: white; padding: 80px 0; text-align: center; }
-.contact-links .btn { margin: 10px; text-decoration: none; padding: 12px 30px; display: inline-block; border-radius: 5px; font-weight: bold; transition: 0.3s; }
-.contact-links .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-.btn-primary { background: white; color: var(--color-dark-teal); }
-.btn-secondary { border: 2px solid white; color: white; }
+
+/* ✅ إصلاح مشكلة الأيقونات الملتصقة ✅ */
+.contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* يسمح بالنزول للسطر التالي إذا ضاقت الشاشة */
+    gap: 15px; /* مسافة بين الأزرار */
+    margin-top: 30px;
+}
+
+/* تنسيق الزر الموحد */
+.contact-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 160px; /* عرض موحد */
+}
+
+.contact-btn:hover { 
+    background-color: #00c6c6; 
+    border-color: #00c6c6;
+    color: #043c4b;
+    transform: translateY(-5px); 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* زر فيسبوك خاص (عند التحويم) */
+.btn-facebook:hover { 
+    background-color: #00c6c6; /* نفس اللون لتوحيد الهوية */
+    border-color: #00c6c6;
+    color: #043c4b;
+}
+
 .main-footer { background: #222; color: #888; text-align: center; padding: 30px; font-size: 0.9rem; }
 
 /* الحركات */
@@ -157,12 +193,14 @@ body {
 
 /* الموبايل */
 @media (max-width: 768px) {
-    .main-header { position: relative; padding-bottom: 15px; }
     .header-container { flex-direction: column; }
     .logo-link { flex-direction: column; align-items: center; margin-bottom: 5px; }
     .logo-img { margin: 0; width: 110px; height: 110px; }
     .logo-link h1 { font-size: 1.8rem; margin: 0; line-height: 1.2; }
-    .main-nav ul { flex-direction: column; justify-content: center; align-items: center; padding: 10px 0; border-top: none; width: 100%; gap: 10px; }
+    .main-nav ul { 
+        flex-direction: column; justify-content: center; align-items: center;
+        padding: 10px 0; border-top: none; width: 100%; gap: 10px;
+    }
     .main-nav li { margin: 0; width: 100%; text-align: center; }
     .main-nav a { display: inline-block; width: 80%; padding: 8px 0; background-color: #f4fcfc; border-radius: 5px; color: var(--color-dark-teal); }
     .hero-welcome-text h2 { font-size: 1.8rem; }
@@ -171,4 +209,8 @@ body {
     .hero-slider { padding-top: 60%; border-radius: 0; }
     div.container.slider-container-wrapper { padding: 0 !important; }
     .animated-logo { width: 180px; }
+    
+    /* تعديل الأزرار للموبايل */
+    .contact-links { flex-direction: column; align-items: center; gap: 10px; }
+    .contact-btn { width: 80%; }
 }

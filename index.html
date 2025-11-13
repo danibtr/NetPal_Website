@@ -31,30 +31,17 @@
         .logo-img { width: 65px; height: 65px; object-fit: contain; margin: 0; }
         .logo-link h1 { font-size: 2rem; color: #043c4b; margin: 0; font-weight: 800; line-height: 1; padding-top: 5px; }
         
-        /* ✅✅ توحيد أزرار التواصل الاجتماعي (كلهم نفس الستايل) ✅✅ */
-        .contact-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: transparent !important; /* شفاف */
-            border: 2px solid white !important; /* إطار أبيض */
+        /* تنسيق زر فيسبوك */
+        .btn-facebook {
+            background-color: transparent !important; 
+            border: 2px solid white !important; 
             color: white !important;
-            padding: 12px 30px;
-            border-radius: 50px; /* حواف دائرية */
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            margin: 5px;
         }
-
-        /* عند التحويم: يضيء باللون الفيروزي */
-        .contact-btn:hover { 
+        .btn-facebook:hover { 
             background-color: #00c6c6 !important; 
             border-color: #00c6c6 !important;
             color: #043c4b !important;
-            transform: translateY(-5px); 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-3px); 
         }
     </style>
 </head>
@@ -144,12 +131,10 @@
                 <a href="https://t.me/net_pal" target="_blank" class="contact-btn">
                     <i class="fa-brands fa-telegram"></i> تيليجرام
                 </a>
-                
                 <a href="https://instagram.com/net.pal22" target="_blank" class="contact-btn">
                     <i class="fa-brands fa-instagram"></i> انستقرام
                 </a>
-                
-                <a href="https://www.facebook.com/share/19sGfeEVo9/" target="_blank" class="contact-btn">
+                <a href="https://www.facebook.com/share/19sGfeEVo9/" target="_blank" class="contact-btn btn-facebook">
                     <i class="fa-brands fa-facebook-f"></i> فيسبوك
                 </a>
             </div>
@@ -163,11 +148,7 @@
     </footer>
 
     <script>
-        const PHONE_1 = "963997804468"; 
-        const PHONE_2 = "963947810769"; 
-        const MAIN_PHONE = "963993841762"; // رقمك الموحد للواتساب
-
-        let currentServiceTitle = "", currentServicePrice = "", currentServiceFeatures = "";
+        const MAIN_PHONE = "963993841762"; 
         const container = document.getElementById('dynamic-services-container');
 
         fetch('services.json?t=' + new Date().getTime()) 
@@ -196,13 +177,15 @@
 
                     const safeTitle = (service.title || "").replace(/'/g, "\\'");
                     const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
-                    const iconClass = service.icon || "fa-cube";
+                    
+                    // ✅ التعديل هنا: يقبل أي كلاس أيقونة (fa-solid أو fa-brands)
+                    const iconClass = service.icon || "fa-solid fa-cube";
 
                     const html = `
                         <div class="service-card">
                             <div class="card-header">
                                 <div class="service-icon-wrapper">
-                                    <i class="fa-solid ${iconClass}"></i>
+                                    <i class="${iconClass}"></i>
                                 </div>
                                 <h3>${service.title}</h3>
                             </div>
@@ -210,7 +193,6 @@
                                 <p class="desc">${service.description || ""}</p>
                                 ${featuresHtml}
                                 <div class="price-tag">${service.price}</div>
-                                
                                 <button class="btn-main" onclick="sendToWhatsapp('${safeTitle}', '${service.price}', '${safeDesc}')">
                                     <i class="fa-brands fa-whatsapp"></i> اطلب الخدمة
                                 </button>
@@ -225,7 +207,6 @@
                 container.innerHTML = "<p style='text-align:center; color:red'>جاري تحديث الخدمات... يرجى المحاولة لاحقاً.</p>";
             });
 
-        // دالة الإرسال المباشر للواتساب (الرقم الموحد)
         function sendToWhatsapp(title, price, features) {
             let text = `مرحباً، أريد طلب خدمة: *${title}*\n`;
             text += `السعر: ${price}\n`;
