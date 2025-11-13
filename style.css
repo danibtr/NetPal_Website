@@ -191,26 +191,66 @@ body {
 }
 @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.05)} }
 
-/* الموبايل */
+/* تحسينات الموبايل النهائية */
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; }
-    .logo-link { flex-direction: column; align-items: center; margin-bottom: 5px; }
-    .logo-img { margin: 0; width: 110px; height: 110px; }
-    .logo-link h1 { font-size: 1.8rem; margin: 0; line-height: 1.2; }
-    .main-nav ul { 
-        flex-direction: column; justify-content: center; align-items: center;
-        padding: 10px 0; border-top: none; width: 100%; gap: 10px;
+    /* 1. إلغاء تثبيت الهيدر وتقليل ارتفاعه */
+    .main-header {
+        position: relative !important; /* تجعل الهيدر يختفي عند النزول */
+        padding: 5px 0 !important; /* تقليل الارتفاع */
+        box-shadow: 0 1px 5px rgba(0,0,0,0.05); /* ظل خفيف جداً */
     }
-    .main-nav li { margin: 0; width: 100%; text-align: center; }
-    .main-nav a { display: inline-block; width: 80%; padding: 8px 0; background-color: #f4fcfc; border-radius: 5px; color: var(--color-dark-teal); }
+
+    /* 2. ترتيب العناصر (اللوجو والاسم) */
+    .header-container { 
+        flex-direction: column; 
+        gap: 5px;
+    }
+    
+    .logo-link { 
+        margin-bottom: 5px; 
+        gap: 8px; /* تقليل المسافة بين اللوجو والاسم */
+    }
+    
+    .logo-img { 
+        width: 50px !important; /* تصغير اللوجو قليلاً ليتناسب */
+        height: 50px !important; 
+    }
+    
+    .logo-link h1 { 
+        font-size: 1.6rem !important; /* تصغير الاسم قليلاً */
+    }
+
+    /* 3. القائمة الأفقية (جنب بعض) */
+    .main-nav ul { 
+        flex-direction: row !important; /* جعلها أفقية */
+        justify-content: center; 
+        align-items: center;
+        padding: 5px 0; 
+        width: 100%; 
+        gap: 15px; /* مسافة بين الكلمات */
+        border-top: 1px solid #f0f0f0; /* خط فاصل خفيف جداً */
+        margin-top: 5px;
+    }
+    
+    .main-nav li { 
+        margin: 0 !important; 
+        width: auto !important; /* عرض تلقائي */
+    }
+    
+    .main-nav a {
+        display: inline-block;
+        width: auto !important;
+        padding: 5px 10px !important; /* تقليل الحشو */
+        background-color: transparent !important; /* إزالة الخلفية الرمادية */
+        font-size: 0.9rem !important; /* تصغير الخط */
+        color: #555 !important;
+    }
+    
+    /* تحسينات عامة أخرى */
     .hero-welcome-text h2 { font-size: 1.8rem; }
     .services-grid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
     .service-card { width: 90%; max-width: 350px; }
     .hero-slider { padding-top: 60%; border-radius: 0; }
     div.container.slider-container-wrapper { padding: 0 !important; }
     .animated-logo { width: 180px; }
-    
-    /* تعديل الأزرار للموبايل */
-    .contact-links { flex-direction: column; align-items: center; gap: 10px; }
-    .contact-btn { width: 80%; }
 }
