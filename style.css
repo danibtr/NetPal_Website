@@ -186,7 +186,7 @@ body {
         flex-direction: column; 
         align-items: center;
         /* تقليل المسافة بين اللوجو والاسم */
-        margin-bottom: 5px; 
+        margin-bottom: 3px; 
     }
     
     .logo-img {
@@ -208,10 +208,10 @@ body {
         flex-direction: column; /* تحت بعض */
         justify-content: center;
         align-items: center; /* توسيط في وسط الشاشة */
-        padding: 10px 0; 
+        padding: 20px 0; 
         border-top: none; 
         width: 100%;
-        gap: 10px;
+        gap: 20px;
     }
     .main-nav li { margin: 0; width: 100%; text-align: center; }
     
