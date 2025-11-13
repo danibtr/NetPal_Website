@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetPal - نيتبال لخدمات الإنترنت</title>
     
+    <title>NetPal | خدمات الإنترنت والذكاء الاصطناعي</title>
+    <meta name="description" content="نيتبال (NetPal) - وجهتك الأولى لاشتراكات الذكاء الاصطناعي (Gemini, ChatGPT) واشتراكات الألعاب وكسب المال من الإنترنت.">
+    
+    <link rel="icon" href="images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="images/logo.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T66Y8ENY24"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -14,11 +21,42 @@
     </script>
 
     <link rel="stylesheet" href="style.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* تنسيق الهيدر */
+        .logo-link { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .logo-img { width: 65px; height: 65px; object-fit: contain; margin: 0; }
+        .logo-link h1 { font-size: 2rem; color: #043c4b; margin: 0; font-weight: 800; line-height: 1; padding-top: 5px; }
+        
+        /* ✅✅ توحيد أزرار التواصل الاجتماعي (كلهم نفس الستايل) ✅✅ */
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: transparent !important; /* شفاف */
+            border: 2px solid white !important; /* إطار أبيض */
+            color: white !important;
+            padding: 12px 30px;
+            border-radius: 50px; /* حواف دائرية */
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        /* عند التحويم: يضيء باللون الفيروزي */
+        .contact-btn:hover { 
+            background-color: #00c6c6 !important; 
+            border-color: #00c6c6 !important;
+            color: #043c4b !important;
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
 
@@ -32,7 +70,7 @@
                 <ul>
                     <li><a href="#services">خدماتنا</a></li>
                     <li><a href="#features">لماذا نحن؟</a></li>
-                    <li><a href="#contact">تواصل معنا</a></li>
+                    <li><a href="#contact">تابعنا</a></li>
                 </ul>
             </nav>
         </div>
@@ -100,14 +138,19 @@
 
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2>هل أنت جاهز للبدء؟</h2>
-            <p>تواصل معنا مباشرة عبر قنواتنا الرسمية.</p>
+            <h2>تابعنا على منصاتنا</h2>
+            <p>لتبقى على اطلاع بآخر العروض والأخبار التقنية.</p>
             <div class="contact-links">
-                <a href="https://t.me/net_pal" target="_blank" class="btn btn-primary">
+                <a href="https://t.me/net_pal" target="_blank" class="contact-btn">
                     <i class="fa-brands fa-telegram"></i> تيليجرام
                 </a>
-                <a href="https://instagram.com/net.pal22" target="_blank" class="btn btn-secondary">
+                
+                <a href="https://instagram.com/net.pal22" target="_blank" class="contact-btn">
                     <i class="fa-brands fa-instagram"></i> انستقرام
+                </a>
+                
+                <a href="https://www.facebook.com/share/19sGfeEVo9/" target="_blank" class="contact-btn">
+                    <i class="fa-brands fa-facebook-f"></i> فيسبوك
                 </a>
             </div>
         </div>
@@ -120,12 +163,13 @@
     </footer>
 
     <script>
-        // ✅ رقم الواتساب الموحد (الجديد)
-        const MAIN_PHONE = "963993841762"; 
-        
+        const PHONE_1 = "963997804468"; 
+        const PHONE_2 = "963947810769"; 
+        const MAIN_PHONE = "963993841762"; // رقمك الموحد للواتساب
+
+        let currentServiceTitle = "", currentServicePrice = "", currentServiceFeatures = "";
         const container = document.getElementById('dynamic-services-container');
 
-        // جلب البيانات من الملف المحلي
         fetch('services.json?t=' + new Date().getTime()) 
             .then(response => {
                 if (!response.ok) throw new Error("HTTP error " + response.status);
@@ -181,16 +225,13 @@
                 container.innerHTML = "<p style='text-align:center; color:red'>جاري تحديث الخدمات... يرجى المحاولة لاحقاً.</p>";
             });
 
-        // دالة الإرسال المباشر للواتساب (بدون نافذة منبثقة)
+        // دالة الإرسال المباشر للواتساب (الرقم الموحد)
         function sendToWhatsapp(title, price, features) {
             let text = `مرحباً، أريد طلب خدمة: *${title}*\n`;
             text += `السعر: ${price}\n`;
-            
             if(features) {
                 text += `\nتفاصيل:\n${decodeURIComponent(features)}`;
             }
-            
-            // فتح الرابط مباشرة
             let url = `https://wa.me/${MAIN_PHONE}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
