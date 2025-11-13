@@ -185,12 +185,6 @@ body {
         margin-bottom: 10px; 
     }
     
-    /* 2. تكبير اللوجو */
-    .logo-img {
-        margin-left: 0;
-        margin-bottom: 5px;
-        width: 90px; /* تكبير */
-        height: 90px;
     }
     
     .logo-link h1 { font-size: 1.8rem; margin: 0; }
