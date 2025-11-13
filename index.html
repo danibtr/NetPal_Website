@@ -17,24 +17,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        #error-debug-box {
-            background-color: #ffe6e6;
-            border: 2px solid #d8000c;
-            color: #d8000c;
-            padding: 15px;
-            margin: 20px auto;
-            border-radius: 8px;
-            text-align: left;
-            direction: ltr;
-            display: none; /* مخفي افتراضياً */
-            font-family: monospace;
-            font-size: 14px;
-            max-width: 90%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-    </style>
 </head>
 <body>
 
@@ -74,11 +56,8 @@
     <section id="services" class="services-section">
         <div class="container">
             <h2>خدماتنا المميزة</h2>
-            
-            <div id="error-debug-box"></div>
-
             <div id="dynamic-services-container" class="services-grid">
-                <p id="loading-text" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري الاتصال بقاعدة البيانات...</p>
+                <p id="loading-msg" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري تحميل الخدمات...</p>
             </div>
         </div>
     </section>
@@ -110,201 +89,64 @@
         </div>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
     <script>
-        // دالة لإظهار رسالة الخطأ
-        function showError(msg, detail) {
-            const box = document.getElementById('error-debug-box');
-            const container = document.getElementById('dynamic-services-container');
-            
-            box.style.display = 'block';
-            box.innerHTML = `<strong>⚠️ حدث خطأ:</strong><br>${msg}<br><br><strong>التفاصيل التقنية:</strong><br>${detail}`;
-            
-            container.innerHTML = ""; // إخفاء أيقونة التحميل
-        }
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
-            authDomain: "netpal-f4cbf.firebaseapp.com",
-            projectId: "netpal-f4cbf",
-            storageBucket: "netpal-f4cbf.firebasestorage.app",
-            messagingSenderId: "801260964399",
-            appId: "1:801260964399:web:d5d0b282e81c20144d14da"
-        };
-
+        // أرقام الواتساب
         const PHONE_1 = "963997804468"; 
         const PHONE_2 = "963947810769"; 
-        let currentServiceTitle = "", currentServicePrice = "", currentServiceFeatures = "";
-
-        try {
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-            const container = document.getElementById('dynamic-services-container');
-
-            // محاولة جلب البيانات
-            db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-                // إخفاء صندوق الخطأ إذا نجح الاتصال
-                document.getElementById('error-debug-box').style.display = 'none';
-                container.innerHTML = "";
-
-                if (querySnapshot.empty) {
-                    container.innerHTML = "<p style='text-align:center; width:100%; color:#666;'>نجح الاتصال، ولكن لا توجد خدمات مضافة حالياً.</p>";
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        const data = doc.data();
-                        let featuresHtml = '';
-                        let featuresText = '';
-                        if (data.features && Array.isArray(data.features)) {
-                            featuresHtml = '<ul class="features-list">';
-                            data.features.forEach(feat => {
-                                featuresHtml += `<li>✅ ${feat}</li>`;
-                                featuresText += `- ${feat}\n`;
-                            });
-                            featuresHtml += '</ul>';
-                        }
-                        const safeTitle = (data.title || "").replace(/'/g, "\\'");
-                        const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
-
-                        const html = `
-                            <div class="service-card">
-                                <div class="card-header"><h3>${data.title}</h3></div>
-                                <div class="card-body">
-                                    <p class="desc">${data.description || ""}</p>
-                                    ${featuresHtml}
-                                    <div class="price-tag">${data.price}</div>
-                                    <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">اطلب الخدمة</button>
-                                </div>
-                            </div>
-                        `;
-                        container.innerHTML += html;
-                    });
-                }
-            }, (error) => {
-                // هنا يتم صيد الأخطاء وعرضها
-                console.error("Firebase Error:", error);
-                
-                if (error.code === 'permission-denied') {
-                    showError("تم رفض الوصول (Permission Denied).", "السبب: قواعد الأمان (Rules) تمنع القراءة، أو الدومين غير مسموح به.");
-                } else if (error.code === 'unavailable') {
-                    showError("الخدمة غير متاحة (Unavailable).", "تأكد من اتصال الإنترنت، أو قد تكون الخدمة محجوبة في منطقتك (جرب VPN).");
-                } else {
-                    showError("فشل جلب البيانات.", error.message + " (Code: " + error.code + ")");
-                }
-            });
-
-        } catch (e) {
-            showError("خطأ في تهيئة الموقع.", e.message);
-        }
-
-        function openModal(title, price, features) {
-            currentServiceTitle = title;
-            currentServicePrice = price;
-            currentServiceFeatures = features;
-            document.getElementById('whatsappModal').style.display = "flex";
-        }
-        function closeModal() { document.getElementById('whatsappModal').style.display = "none"; }
-        window.onclick = function(event) { if (event.target == document.getElementById('whatsappModal')) closeModal(); }
-        function sendToWhatsapp(agent) {
-            let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
-            let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\nالسعر: ${currentServicePrice}\n`;
-            if(currentServiceFeatures) text += `\nتفاصيل:\n${decodeURIComponent(currentServiceFeatures)}`;
-            let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
-            closeModal();
-        }
-    </script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
-            authDomain: "netpal-f4cbf.firebaseapp.com",
-            projectId: "netpal-f4cbf",
-            storageBucket: "netpal-f4cbf.firebasestorage.app",
-            messagingSenderId: "801260964399",
-            appId: "1:801260964399:web:d5d0b282e81c20144d14da"
-        };
-
-        const PHONE_1 = "963997804468"; 
-        const PHONE_2 = "963947810769"; 
+        
         let currentServiceTitle = "", currentServicePrice = "", currentServiceFeatures = "";
         const container = document.getElementById('dynamic-services-container');
 
-        // دالة رسم الخدمات (تستخدم للـ Firebase وللملف المحلي)
-        function renderServices(servicesList) {
-            container.innerHTML = "";
-            if (servicesList.length === 0) {
-                container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات حالياً.</p>";
-                return;
-            }
-            
-            servicesList.forEach(data => {
-                let featuresHtml = '';
-                let featuresText = '';
-                // التعامل مع الميزات سواء كانت من Firebase أو JSON
-                if (data.features && Array.isArray(data.features)) {
-                    featuresHtml = '<ul class="features-list">';
-                    data.features.forEach(feat => {
-                        featuresHtml += `<li>✅ ${feat}</li>`;
-                        featuresText += `- ${feat}\n`;
-                    });
-                    featuresHtml += '</ul>';
+        // 🚀 الحل النهائي: قراءة الملف مباشرة (يعمل بدون VPN)
+        // نضيف ?t=timestamp لمنع المتصفح من حفظ النسخة القديمة (Caching)
+        fetch('services.json?t=' + new Date().getTime()) 
+            .then(response => {
+                if (!response.ok) throw new Error("HTTP error " + response.status);
+                return response.json();
+            })
+            .then(data => {
+                container.innerHTML = "";
+                if (!Array.isArray(data) || data.length === 0) {
+                    container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد خدمات حالياً.</p>";
+                    return;
                 }
 
-                const safeTitle = (data.title || "").replace(/'/g, "\\'");
-                const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
+                data.forEach(service => {
+                    // تجهيز الميزات
+                    let featuresHtml = '';
+                    let featuresText = '';
+                    if (service.features && Array.isArray(service.features)) {
+                        featuresHtml = '<ul class="features-list">';
+                        service.features.forEach(feat => {
+                            featuresHtml += `<li>✅ ${feat}</li>`;
+                            featuresText += `- ${feat}\n`;
+                        });
+                        featuresHtml += '</ul>';
+                    }
 
-                const html = `
-                    <div class="service-card">
-                        <div class="card-header"><h3>${data.title}</h3></div>
-                        <div class="card-body">
-                            <p class="desc">${data.description || ""}</p>
-                            ${featuresHtml}
-                            <div class="price-tag">${data.price}</div>
-                            <button class="btn-main" onclick="openModal('${safeTitle}', '${data.price}', '${safeDesc}')">اطلب الخدمة</button>
+                    const safeTitle = (service.title || "").replace(/'/g, "\\'");
+                    const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
+
+                    const html = `
+                        <div class="service-card">
+                            <div class="card-header"><h3>${service.title}</h3></div>
+                            <div class="card-body">
+                                <p class="desc">${service.description || ""}</p>
+                                ${featuresHtml}
+                                <div class="price-tag">${service.price}</div>
+                                <button class="btn-main" onclick="openModal('${safeTitle}', '${service.price}', '${safeDesc}')">اطلب الخدمة</button>
+                            </div>
                         </div>
-                    </div>
-                `;
-                container.innerHTML += html;
-            });
-        }
-
-        // محاولة الاتصال بـ Firebase أولاً
-        try {
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-
-            db.collection("services").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-                const services = [];
-                querySnapshot.forEach((doc) => services.push(doc.data()));
-                renderServices(services);
-            }, (error) => {
-                // ⚠️ إذا فشل Firebase (بسبب الحظر أو VPN)، ننتقل للخطة البديلة
-                console.warn("فشل Firebase، جاري التحميل من الملف المحلي...", error);
-                loadLocalServices();
-            });
-
-        } catch (e) {
-            console.error("خطأ في تهيئة Firebase، الانتقال للمحلي.");
-            loadLocalServices();
-        }
-
-        // الخطة البديلة: تحميل البيانات من services.json
-        function loadLocalServices() {
-            fetch('services.json')
-                .then(response => response.json())
-                .then(data => {
-                    renderServices(data);
-                })
-                .catch(error => {
-                    container.innerHTML = "<p style='text-align:center; color:red;'>عذراً، حدث خطأ في تحميل الخدمات.</p>";
+                    `;
+                    container.innerHTML += html;
                 });
-        }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                container.innerHTML = "<p style='text-align:center; color:red'>جاري تحديث الخدمات... يرجى المحاولة لاحقاً.</p>";
+            });
 
-        // --- النوافذ والواتساب ---
+        // --- دوال النوافذ والواتساب ---
         function openModal(title, price, features) {
             currentServiceTitle = title;
             currentServicePrice = price;
@@ -322,3 +164,5 @@
             closeModal();
         }
     </script>
+</body>
+</html>
