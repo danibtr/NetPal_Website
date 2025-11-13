@@ -2,7 +2,7 @@
   {
     "title": "ChatGPT Go (السنوي)",
     "price": "14.99$",
-    "icon": "fa-chatgpt",
+    "icon": "<i class=\"fa-brands fa-openai\"></i>",
     "description": "الخيار الاقتصادي الذكي",
     "features": [
       "ذكاء بلا حدود، سعر ولا أروع: استمتع بقوة الذكاء الاصطناعي الكاملة بميزانية طالب.",
