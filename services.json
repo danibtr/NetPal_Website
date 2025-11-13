@@ -1,5 +1,19 @@
 [
   {
+    "title": "Gemini Pro (Google One AI Premium) (الشهري)",
+    "price": "4.99$",
+    "icon": "fa-brands fa-google",
+    "description": "افضل خطة من غوغل ب سعر أقتصادي",
+    "features": [
+      "أذكى نماذج Google: وصول كامل لنموذج Gemini 2.5 Pro.",
+      "مساحة تخزين هائلة: 2 تيرابايت لحفظ الملفات والصور.",
+      "مساعدك في الإنتاجية: دمج الذكاء الاصطناعي داخل Docs و Gmail.",
+      "مشاركة عائلية: مشاركة الميزات مع 5 أشخاص آخرين.",
+      "أدوات صور حصرية: ميزات Magic Editor في Google Photos.",
+      "اجتماعات بلا حدود: مكالمات فيديو محسنة وطويلة."
+    ]
+  },
+  {
     "title": "ChatGPT Go (السنوي)",
     "price": "14.99$",
     "icon": "fa-solid fa-robot",
