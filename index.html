@@ -14,9 +14,11 @@
     </script>
 
     <link rel="stylesheet" href="style.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -29,6 +31,7 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="#services">خدماتنا</a></li>
+                    <li><a href="#features">لماذا نحن؟</a></li>
                     <li><a href="#contact">تواصل معنا</a></li>
                 </ul>
             </nav>
@@ -37,9 +40,11 @@
 
     <section class="hero-welcome-text">
         <div class="container">
-            <h2>أهلاً بكم في نيتبال</h2>
-            <p>نقدم خدمات انترنت متنوعة ونساعدك في كسب المال من الإنترنت.</p>
-            <a href="#services" class="btn btn-primary-dark">استكشف خدماتنا</a>
+            <h2>أهلاً بكم في <span style="color:#00c6c6;">NetPal</span></h2>
+            <p>بوابتك لعالم الذكاء الاصطناعي، الألعاب، والحرية المالية.</p>
+            <a href="#services" class="btn btn-primary-dark">
+                <i class="fa-solid fa-rocket"></i> استكشف خدماتنا
+            </a>
         </div>
     </section>
 
@@ -55,50 +60,72 @@
 
     <section id="services" class="services-section">
         <div class="container">
-            <h2>خدماتنا المميزة</h2>
+            <div class="section-header">
+                <h2>باقاتنا وخدماتنا</h2>
+                <div class="section-line"></div>
+            </div>
             <div id="dynamic-services-container" class="services-grid">
-                <p id="loading-msg" style="text-align: center; width: 100%; font-size: 1.2rem;">جاري تحميل الخدمات...</p>
+                <p id="loading-msg" style="text-align: center; width: 100%; font-size: 1.2rem; color:#555;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل الخدمات...
+                </p>
             </div>
         </div>
     </section>
 
-    <div id="whatsappModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 style="color: #043c4b; margin-bottom: 15px;">تواصل لطلب الخدمة</h3>
-            <p style="margin-bottom: 20px; color: #666;">اختر أحد ممثلي الدعم الفني للمتابعة:</p>
-            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_1')">📱 تواصل مع الدعم (رقم 1)</button>
-            <button class="btn-whatsapp" onclick="sendToWhatsapp('NUMBER_2')">📱 تواصل مع الدعم (رقم 2)</button>
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>لماذا تختار NetPal؟</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="icon-box"><i class="fa-solid fa-headset"></i></div>
+                    <h3>دعم فني متميز</h3>
+                    <p>فريقنا جاهز لمساعدتك والإجابة على استفساراتك على مدار الساعة.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>ضمان وأمان</h3>
+                    <p>جميع خدماتنا واشتراكاتنا رسمية، آمنة، ومضمونة 100%.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon-box"><i class="fa-solid fa-tag"></i></div>
+                    <h3>أفضل الأسعار</h3>
+                    <p>نقدم لك أفضل قيمة مقابل السعر في السوق، مع عروض مستمرة.</p>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
     <section id="contact" class="contact-section">
         <div class="container">
             <h2>هل أنت جاهز للبدء؟</h2>
-            <p>تواصل معنا مباشرة عبر تيليجرام أو تابعنا على انستقرام.</p>
+            <p>تواصل معنا مباشرة عبر قنواتنا الرسمية.</p>
             <div class="contact-links">
-                <a href="https://t.me/net_pal" target="_blank" class="btn btn-primary">تيليجرام (@net_pal)</a>
-                <a href="https://instagram.com/net.pal22" target="_blank" class="btn btn-secondary">انستقرام (@net.pal22)</a>
+                <a href="https://t.me/net_pal" target="_blank" class="btn btn-primary">
+                    <i class="fa-brands fa-telegram"></i> تيليجرام
+                </a>
+                <a href="https://instagram.com/net.pal22" target="_blank" class="btn btn-secondary">
+                    <i class="fa-brands fa-instagram"></i> انستقرام
+                </a>
             </div>
         </div>
     </section>
 
     <footer class="main-footer">
         <div class="container">
-            <p>جميع الحقوق محفوظة &copy; 2025 - NetPal</p>
+            <p>جميع الحقوق محفوظة &copy; 2025 - <strong>NetPal</strong></p>
         </div>
     </footer>
 
     <script>
-        // أرقام الواتساب
-        const PHONE_1 = "963997804468"; 
-        const PHONE_2 = "963947810769"; 
+        // ✅ رقم الواتساب الموحد (الجديد)
+        const MAIN_PHONE = "963993841762"; 
         
-        let currentServiceTitle = "", currentServicePrice = "", currentServiceFeatures = "";
         const container = document.getElementById('dynamic-services-container');
 
-        // 🚀 الحل النهائي: قراءة الملف مباشرة (يعمل بدون VPN)
-        // نضيف ?t=timestamp لمنع المتصفح من حفظ النسخة القديمة (Caching)
+        // جلب البيانات من الملف المحلي
         fetch('services.json?t=' + new Date().getTime()) 
             .then(response => {
                 if (!response.ok) throw new Error("HTTP error " + response.status);
@@ -112,13 +139,12 @@
                 }
 
                 data.forEach(service => {
-                    // تجهيز الميزات
                     let featuresHtml = '';
                     let featuresText = '';
                     if (service.features && Array.isArray(service.features)) {
                         featuresHtml = '<ul class="features-list">';
                         service.features.forEach(feat => {
-                            featuresHtml += `<li>✅ ${feat}</li>`;
+                            featuresHtml += `<li><i class="fa-solid fa-check" style="color:#00c6c6; margin-left:5px;"></i> ${feat}</li>`;
                             featuresText += `- ${feat}\n`;
                         });
                         featuresHtml += '</ul>';
@@ -126,15 +152,24 @@
 
                     const safeTitle = (service.title || "").replace(/'/g, "\\'");
                     const safeDesc = featuresText.replace(/'/g, "\\'").replace(/\n/g, "%0A");
+                    const iconClass = service.icon || "fa-cube";
 
                     const html = `
                         <div class="service-card">
-                            <div class="card-header"><h3>${service.title}</h3></div>
+                            <div class="card-header">
+                                <div class="service-icon-wrapper">
+                                    <i class="fa-solid ${iconClass}"></i>
+                                </div>
+                                <h3>${service.title}</h3>
+                            </div>
                             <div class="card-body">
                                 <p class="desc">${service.description || ""}</p>
                                 ${featuresHtml}
                                 <div class="price-tag">${service.price}</div>
-                                <button class="btn-main" onclick="openModal('${safeTitle}', '${service.price}', '${safeDesc}')">اطلب الخدمة</button>
+                                
+                                <button class="btn-main" onclick="sendToWhatsapp('${safeTitle}', '${service.price}', '${safeDesc}')">
+                                    <i class="fa-brands fa-whatsapp"></i> اطلب الخدمة
+                                </button>
                             </div>
                         </div>
                     `;
@@ -146,22 +181,18 @@
                 container.innerHTML = "<p style='text-align:center; color:red'>جاري تحديث الخدمات... يرجى المحاولة لاحقاً.</p>";
             });
 
-        // --- دوال النوافذ والواتساب ---
-        function openModal(title, price, features) {
-            currentServiceTitle = title;
-            currentServicePrice = price;
-            currentServiceFeatures = features;
-            document.getElementById('whatsappModal').style.display = "flex";
-        }
-        function closeModal() { document.getElementById('whatsappModal').style.display = "none"; }
-        window.onclick = function(event) { if (event.target == document.getElementById('whatsappModal')) closeModal(); }
-        function sendToWhatsapp(agent) {
-            let phone = (agent === 'NUMBER_1') ? PHONE_1 : PHONE_2;
-            let text = `مرحباً، أريد طلب خدمة: *${currentServiceTitle}*\nالسعر: ${currentServicePrice}\n`;
-            if(currentServiceFeatures) text += `\nتفاصيل:\n${decodeURIComponent(currentServiceFeatures)}`;
-            let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+        // دالة الإرسال المباشر للواتساب (بدون نافذة منبثقة)
+        function sendToWhatsapp(title, price, features) {
+            let text = `مرحباً، أريد طلب خدمة: *${title}*\n`;
+            text += `السعر: ${price}\n`;
+            
+            if(features) {
+                text += `\nتفاصيل:\n${decodeURIComponent(features)}`;
+            }
+            
+            // فتح الرابط مباشرة
+            let url = `https://wa.me/${MAIN_PHONE}?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
-            closeModal();
         }
     </script>
 </body>

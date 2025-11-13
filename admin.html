@@ -4,181 +4,260 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم NetPal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #333; }
-        .container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
-        h2 { color: #043c4b; text-align: center; margin-bottom: 1.5rem; }
-        input, button, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 20px; color: #333; }
+        .container { background: white; padding: 2.5rem; border-radius: 15px; max-width: 700px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { color: #043c4b; text-align: center; margin-bottom: 25px; font-weight: 800; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; font-size: 0.9rem; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: #00c6c6; outline: none; box-shadow: 0 0 0 3px rgba(0, 198, 198, 0.1); }
         textarea { height: 100px; resize: vertical; }
         
-        .btn-add { background-color: #00c6c6; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-add:hover { background-color: #043c4b; }
+        .icon-preview { font-size: 24px; color: #00c6c6; margin-right: 10px; }
         
-        .btn-cancel { background-color: #777; color: white; border: none; display: none; margin-top: 5px; cursor: pointer; }
+        button { background-color: #00c6c6; color: white; border: none; padding: 14px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 8px; font-size: 16px; transition: 0.3s; margin-top: 10px; }
+        button:hover { background-color: #043c4b; transform: translateY(-2px); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
 
-        .service-item { background: #f9f9f9; border-right: 5px solid #00c6c6; padding: 15px; margin-bottom: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .service-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .service-actions button { padding: 5px 10px; margin-left: 5px; font-size: 14px; cursor: pointer; border: none; border-radius: 3px; color: white; }
-        .btn-edit { background-color: #ffa502; }
-        .btn-delete { background-color: #ff4757; }
+        .btn-cancel { background-color: #777; margin-top: 10px; }
+        .btn-cancel:hover { background-color: #555; }
+
+        .service-item { background: #fff; border: 1px solid #eee; padding: 20px; margin-bottom: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #043c4b; }
+        .service-title { color: #043c4b; font-size: 1.2em; font-weight: bold; display: flex; align-items: center; gap: 10px; }
         
-        #dashboard { display: none; }
+        .service-actions { display: flex; gap: 10px; }
+        .btn-action { padding: 8px 15px; font-size: 13px; width: auto; border-radius: 5px; margin-top: 0; }
+        .btn-edit { background-color: #ffa502; color: white; }
+        .btn-delete { background-color: #ff4757; color: white; }
+        
+        #status { text-align: center; margin-top: 15px; font-weight: bold; padding: 10px; border-radius: 5px; }
+        .success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .info { color: #0c5460; background-color: #d1ecf1; border: 1px solid #bee5eb; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="container">
-        <h2>🔐 دخول المسؤول</h2>
-        <input type="email" id="email" placeholder="البريد الإلكتروني">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <button class="btn-add" onclick="login()">دخول</button>
-    </div>
+    <div class="container">
+        <h2 id="formTitle">⚙️ إدارة خدمات NetPal</h2>
+        
+        <input type="hidden" id="editIndex"> 
+        
+        <div class="input-group">
+            <label>عنوان الخدمة</label>
+            <input type="text" id="title" placeholder="مثلاً: اشتراك Gemini Pro">
+        </div>
 
-    <div id="dashboard" class="container">
-        <h2 id="formTitle">⚙️ إضافة خدمة جديدة</h2>
+        <div class="input-group" style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <label>السعر</label>
+                <input type="text" id="price" placeholder="مثلاً: 35$">
+            </div>
+            <div style="flex: 1;">
+                <label>اسم الأيقونة (FontAwesome)</label>
+                <input type="text" id="icon" placeholder="مثلاً: fa-robot" oninput="updateIconPreview()">
+            </div>
+            <div style="display: flex; align-items: flex-end; padding-bottom: 12px;">
+                <i id="iconPreview" class="fa-solid fa-icons icon-preview"></i>
+            </div>
+        </div>
+        <small style="display:block; margin-bottom: 15px; color: #666;">
+            للحصول على أسماء الأيقونات: <a href="https://fontawesome.com/search?o=r&m=free" target="_blank" style="color:#00c6c6">اضغط هنا</a> (انسخ الاسم مثل: fa-gamepad, fa-robot, fa-money-bill)
+        </small>
+
+        <div class="input-group">
+            <label>وصف قصير</label>
+            <textarea id="desc" style="height: 60px;" placeholder="وصف يظهر تحت العنوان مباشرة"></textarea>
+        </div>
         
-        <input type="hidden" id="serviceId">
+        <div class="input-group">
+            <label>قائمة الميزات (كل ميزة في سطر جديد)</label>
+            <textarea id="features" placeholder="- ميزة 1&#10;- ميزة 2&#10;- ميزة 3"></textarea>
+        </div>
         
-        <input type="text" id="serviceTitle" placeholder="عنوان الخدمة">
-        <input type="text" id="servicePrice" placeholder="السعر (مثلاً: $35)">
-        <textarea id="serviceDesc" placeholder="وصف قصير للخدمة (سطرين)"></textarea>
-        <textarea id="serviceFeatures" placeholder="قائمة الميزات (كل ميزة في سطر جديد)"></textarea>
+        <button onclick="saveService()" id="saveBtn">حفظ ونشر على الموقع</button>
+        <button onclick="cancelEdit()" id="cancelBtn" class="btn-cancel" style="display: none;">إلغاء التعديل</button>
         
-        <button id="submitBtn" class="btn-add" onclick="saveService()">+ إضافة الخدمة</button>
-        <button id="cancelBtn" class="btn-cancel" onclick="resetForm()">إلغاء التعديل</button>
-        
+        <p id="status"></p>
+
         <hr style="margin: 30px 0; border-color: #eee;">
-        <h3>الخدمات الحالية:</h3>
-        <div id="servicesList"></div>
+        <h3 style="color: #555;">الخدمات الحالية:</h3>
+        <div id="servicesList">جاري الاتصال...</div>
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyB4CGTeNjW-X8QQtC97JT2PphZJfeClBuU",
-            authDomain: "netpal-f4cbf.firebaseapp.com",
-            projectId: "netpal-f4cbf",
-            storageBucket: "netpal-f4cbf.firebasestorage.app",
-            messagingSenderId: "801260964399",
-            appId: "1:801260964399:web:d5d0b282e81c20144d14da"
-        };
+        // ✅ بياناتك الحقيقية
+        const GITHUB_USERNAME = "danibtr"; 
+        const REPO_NAME = "NetPal_Website"; 
+        const FILE_PATH = "services.json"; 
+        const GITHUB_TOKEN = "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"; // مفتاحك
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+        const API_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`;
+        
+        let currentSha = ""; 
+        let servicesData = []; 
 
-        // مخزن مؤقت للبيانات لتسهيل التعديل
-        let cachedServices = {};
-
-        function login() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('dashboard').style.display = 'block';
-                    loadServices();
-                })
-                .catch(error => alert("خطأ: " + error.message));
+        function updateIconPreview() {
+            const iconName = document.getElementById('icon').value;
+            const preview = document.getElementById('iconPreview');
+            preview.className = `fa-solid ${iconName || 'fa-icons'} icon-preview`;
         }
 
-        function saveService() {
-            const id = document.getElementById('serviceId').value;
-            const title = document.getElementById('serviceTitle').value;
-            const price = document.getElementById('servicePrice').value;
-            const desc = document.getElementById('serviceDesc').value;
-            const featuresRaw = document.getElementById('serviceFeatures').value;
+        async function fetchServices() {
+            const listDiv = document.getElementById('servicesList');
+            listDiv.innerHTML = "<p class='info'>جاري الاتصال بـ GitHub...</p>";
             
-            const features = featuresRaw.split('\n').filter(item => item.trim() !== '');
+            try {
+                const response = await fetch(API_URL, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
 
-            if (!title || !price) { alert("أدخل العنوان والسعر على الأقل"); return; }
+                if (!response.ok) {
+                    if(response.status === 404) { servicesData = []; renderList(); return; }
+                    throw new Error(`خطأ: ${response.status}`);
+                }
 
-            const data = {
-                title: title,
-                price: price,
-                description: desc,
-                features: features,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            const promise = id ? db.collection("services").doc(id).update(data) : db.collection("services").add(data);
-
-            promise.then(() => {
-                alert(id ? "تم التعديل!" : "تمت الإضافة!");
-                resetForm();
-                loadServices();
-            }).catch(error => alert("خطأ: " + error.message));
+                const data = await response.json();
+                const content = decodeURIComponent(escape(window.atob(data.content)));
+                servicesData = JSON.parse(content);
+                currentSha = data.sha; 
+                renderList();
+            } catch (error) {
+                console.error(error);
+                listDiv.innerHTML = `<p class="error">فشل الاتصال: ${error.message}</p>`;
+            }
         }
 
-        // دالة التجهيز للتعديل (النسخة الآمنة)
-        function prepareEdit(id) {
-            const data = cachedServices[id]; // جلب البيانات من الذاكرة
-            if (!data) return;
+        function renderList() {
+            const list = document.getElementById('servicesList');
+            list.innerHTML = "";
+            if(servicesData.length === 0) { list.innerHTML = "<p>لا توجد خدمات حالياً.</p>"; return; }
+
+            servicesData.forEach((service, index) => {
+                // تعيين أيقونة افتراضية إذا لم توجد
+                const iconClass = service.icon || "fa-check-circle";
+                
+                list.innerHTML += `
+                    <div class="service-item">
+                        <div class="service-info">
+                            <div class="service-title">
+                                <i class="fa-solid ${iconClass}" style="color: #00c6c6;"></i>
+                                ${service.title}
+                            </div>
+                            <small style="color:#777; display:block; margin-top:5px;">${service.price}</small>
+                        </div>
+                        <div class="service-actions">
+                            <button class="btn-action btn-edit" onclick="editService(${index})"><i class="fa-solid fa-pen"></i> تعديل</button>
+                            <button class="btn-action btn-delete" onclick="deleteService(${index})"><i class="fa-solid fa-trash"></i> حذف</button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('status').innerText = "";
+            document.getElementById('status').className = "";
+        }
+
+        async function saveService() {
+            const index = document.getElementById('editIndex').value;
+            const title = document.getElementById('title').value;
+            const price = document.getElementById('price').value;
+            const icon = document.getElementById('icon').value || "fa-check-circle"; // أيقونة افتراضية
+            const desc = document.getElementById('desc').value;
+            const featuresRaw = document.getElementById('features').value;
+            const features = featuresRaw.split('\n').filter(line => line.trim() !== "");
+
+            if (!title || !price) return alert("أدخل العنوان والسعر");
+
+            const serviceObj = { title, price, icon, description: desc, features };
+
+            if (index !== "") { servicesData[index] = serviceObj; } 
+            else { servicesData.unshift(serviceObj); }
+
+            await updateGithubFile();
+            cancelEdit();
+        }
+
+        function editService(index) {
+            const data = servicesData[index];
+            document.getElementById('editIndex').value = index;
+            document.getElementById('title').value = data.title;
+            document.getElementById('price').value = data.price;
+            document.getElementById('icon').value = data.icon || "";
+            document.getElementById('desc').value = data.description || "";
+            document.getElementById('features').value = data.features ? data.features.join('\n') : '';
+            
+            updateIconPreview();
 
             document.getElementById('formTitle').innerText = "تعديل الخدمة";
-            document.getElementById('submitBtn').innerText = "حفظ التعديلات";
+            document.getElementById('saveBtn').innerText = "حفظ التعديلات";
+            document.getElementById('saveBtn').style.backgroundColor = "#ffa502";
             document.getElementById('cancelBtn').style.display = "block";
-            
-            document.getElementById('serviceId').value = id;
-            document.getElementById('serviceTitle').value = data.title;
-            document.getElementById('servicePrice').value = data.price;
-            document.getElementById('serviceDesc').value = data.description || "";
-            document.getElementById('serviceFeatures').value = data.features ? data.features.join('\n') : '';
-            
             window.scrollTo(0,0);
         }
 
-        function resetForm() {
+        function cancelEdit() {
+            document.getElementById('editIndex').value = "";
+            document.getElementById('title').value = "";
+            document.getElementById('price').value = "";
+            document.getElementById('icon').value = "";
+            document.getElementById('desc').value = "";
+            document.getElementById('features').value = "";
+            updateIconPreview();
+
             document.getElementById('formTitle').innerText = "⚙️ إضافة خدمة جديدة";
-            document.getElementById('submitBtn').innerText = "+ إضافة الخدمة";
+            document.getElementById('saveBtn').innerText = "حفظ ونشر على الموقع";
+            document.getElementById('saveBtn').style.backgroundColor = "#00c6c6";
             document.getElementById('cancelBtn').style.display = "none";
-            document.getElementById('serviceId').value = "";
-            
-            document.getElementById('serviceTitle').value = "";
-            document.getElementById('servicePrice').value = "";
-            document.getElementById('serviceDesc').value = "";
-            document.getElementById('serviceFeatures').value = "";
         }
 
-        function loadServices() {
-            const list = document.getElementById('servicesList');
-            list.innerHTML = "جاري التحميل...";
-            
-            db.collection("services").orderBy("timestamp", "desc").get().then((querySnapshot) => {
-                list.innerHTML = "";
-                cachedServices = {}; // تصفير الذاكرة
-                
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    cachedServices[doc.id] = data; // حفظ البيانات برقم الهوية
+        async function deleteService(index) {
+            if(!confirm("حذف هذه الخدمة؟")) return;
+            servicesData.splice(index, 1);
+            await updateGithubFile();
+        }
 
-                    list.innerHTML += `
-                        <div class="service-item">
-                            <div class="service-header">
-                                <div>
-                                    <strong style="font-size:1.2em">${data.title}</strong>
-                                    <span style="color:#00c6c6; font-weight:bold"> (${data.price})</span>
-                                </div>
-                                <div class="service-actions">
-                                    <button class="btn-edit" onclick="prepareEdit('${doc.id}')">تعديل</button>
-                                    <button class="btn-delete" onclick="deleteService('${doc.id}')">حذف</button>
-                                </div>
-                            </div>
-                            <p style="color:#666; margin:0">${data.description}</p>
-                        </div>
-                    `;
+        async function updateGithubFile() {
+            const btn = document.getElementById('saveBtn');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            const oldText = btn.innerText;
+            btn.innerText = "جاري النشر...";
+            status.innerText = "جاري الحفظ في GitHub...";
+            status.className = "info";
+
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(servicesData, null, 2))));
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: "Update via Admin Panel", content: content, sha: currentSha })
                 });
-            });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentSha = data.content.sha; 
+                    status.innerText = "✅ تم التحديث بنجاح!";
+                    status.className = "success";
+                    renderList();
+                } else {
+                    const err = await response.json();
+                    throw new Error(err.message);
+                }
+            } catch (error) {
+                console.error(error);
+                status.innerText = `❌ فشل الحفظ: ${error.message}`;
+                status.className = "error";
+            }
+            btn.disabled = false;
+            btn.innerText = oldText;
         }
 
-        function deleteService(id) {
-            if(confirm('هل أنت متأكد من الحذف؟')) {
-                db.collection("services").doc(id).delete().then(() => loadServices());
-            }
-        }
+        fetchServices();
     </script>
 </body>
 </html>
