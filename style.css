@@ -24,7 +24,6 @@ body {
     background: var(--color-white);
     padding: 10px 0;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    /* التثبيت الافتراضي (للكمبيوتر) */
     position: sticky; 
     top: 0; 
     z-index: 1000;
@@ -65,14 +64,14 @@ body {
     background-size: cover; background-position: center;
     animation: fade 12s infinite; opacity: 0;
 }
-#slide-1 { animation-name: fade1; }
-#slide-2 { animation-name: fade2; }
+#slide-1 { animation-name: fade1; } /* الصورة الأولى */
+#slide-2 { animation-name: fade2; } /* الصورة الثانية */
 
 /* اللوجو المتحرك */
 .animated-logo-container {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     display: flex; justify-content: center; align-items: center; z-index: 2;
-    animation: showLogoOnSecondSlide 12.3s infinite; 
+    animation: showLogoOnSecondSlide 12s infinite; 
 }
 .animated-logo { width: 600px; max-width: 80%; animation: pulse 3s infinite alternate; }
 
@@ -155,25 +154,29 @@ body {
 .btn-secondary { border: 2px solid white; color: white; }
 .main-footer { background: #222; color: #888; text-align: center; padding: 20px; font-size: 0.9rem; }
 
-/* الحركات */
-@keyframes fade1 { 0%,45%{opacity:1} 55%,100%{opacity:0} }
-@keyframes fade2 { 0%,45%{opacity:0} 55%,100%{opacity:1} }
+/* --- الحركات (تم تعديلها لتكون آمنة 100%) --- */
+/* الصورة الأولى: تظهر من 0 إلى 45% */
+@keyframes fade1 { 0%,45%{opacity:1} 50%,100%{opacity:0} } 
+/* الصورة الثانية: تظهر من 50% إلى 95% */
+@keyframes fade2 { 0%,45%{opacity:0} 50%,100%{opacity:1} } 
+
+/* حركة اللوجو (تم ضبطها بدقة) */
 @keyframes showLogoOnSecondSlide {
     0%   { opacity: 0; transform: scale(0.9); }    
-    45%  { opacity: 0; transform: scale(0.9); }    
-    55%  { opacity: 1; transform: scale(1); }   
-    95%  { opacity: 1; transform: scale(1.05); }   
+    49%  { opacity: 0; transform: scale(0.9); }  /* يبقى مخفياً تماماً أثناء الصورة الأولى */
+    55%  { opacity: 1; transform: scale(1); }    /* يظهر بوضوح مع بداية الصورة الثانية */
+    90%  { opacity: 1; transform: scale(1.05); } /* يبقى ظاهراً */
+    95%  { opacity: 0; transform: scale(1.1); }  /* يختفي قبل أن تعود الصورة الأولى */
     100% { opacity: 0; transform: scale(1.1); }  
 }
+
 @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.05)} }
 @keyframes slideDown { from{transform:translateY(-50px);opacity:0} to{transform:translateY(0);opacity:1} }
 
-/* --- تحسينات الموبايل (الجديدة والمعدلة) --- */
+/* --- تحسينات الموبايل (تعديلات دقيقة حسب طلبك) --- */
 @media (max-width: 768px) {
-    
-    /* 1. إلغاء تثبيت الهيدر عند التقليب */
     .main-header {
-        position: relative; /* يتحرك مع الصفحة */
+        position: relative;
         padding-bottom: 15px;
     }
 
@@ -182,48 +185,48 @@ body {
     .logo-link { 
         flex-direction: column; 
         align-items: center;
-        margin-bottom: 10px; 
+        /* تقليل المسافة بين اللوجو والاسم */
+        margin-bottom: 5px; 
     }
     
+    .logo-img {
+        margin-left: 0;
+        margin-bottom: 0px; /* إلصاقه بالاسم أكثر */
+        /* تكبير اللوجو كما طلبت */
+        width: 110px; 
+        height: 110px;
     }
     
-    .logo-link h1 { font-size: 1.8rem; margin: 0; }
+    .logo-link h1 { 
+        font-size: 1.8rem; 
+        margin: 0; 
+        line-height: 1.2;
+    }
 
-    /* 3. القائمة: تحت بعض، بدون خط، ومرتبة */
+    /* توسيط القائمة */
     .main-nav ul { 
         flex-direction: column; /* تحت بعض */
         justify-content: center;
-        padding: 0; 
-        border-top: none; /* إزالة الخط */
+        align-items: center; /* توسيط في وسط الشاشة */
+        padding: 10px 0; 
+        border-top: none; 
         width: 100%;
-        gap: 10px; /* مسافة بين الروابط */
+        gap: 10px;
     }
-    .main-nav li { margin: 0; }
+    .main-nav li { margin: 0; width: 100%; text-align: center; }
     
-    /* تنسيق الروابط كأزرار بسيطة للترتيب */
     .main-nav a {
-        display: block;
-        background-color: #f4fcfc;
-        width: 200px; /* عرض ثابت */
+        display: inline-block; /* ليتوسط بشكل صحيح */
+        width: 80%; /* ليس عريضاً جداً */
         padding: 8px 0;
+        background-color: #f4fcfc;
         border-radius: 5px;
         color: var(--color-dark-teal);
     }
-
+    
     .hero-welcome-text h2 { font-size: 1.8rem; }
-    
-    /* 4. تصغير إطار الخدمات وترتيبها */
-    .services-grid { 
-        display: flex; 
-        flex-direction: column;
-        align-items: center; /* توسيط الكروت */
-        gap: 30px;
-    }
-    
-    .service-card {
-        width: 90%; /* ليس كامل الشاشة */
-        max-width: 350px; /* حد أقصى للعرض */
-    }
+    .services-grid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+    .service-card { width: 90%; max-width: 350px; }
 
     .hero-slider { padding-top: 60%; border-radius: 0; }
     div.container.slider-container-wrapper { padding: 0 !important; }
