@@ -1,5 +1,18 @@
 [
   {
+    "title": "Adobe Creative Cloud Pro (الشهري)",
+    "price": "10$",
+    "icon": "fa-solid fa-pen-nib",
+    "description": "جميع تطبيقات و ميزات Adobe الرسمية",
+    "features": [
+      "أكثر من 20 تطبيق Adobe احترافي (تصميم + فيديو + موشن + تصوير)",
+      "Adobe Firefly AI ضمن الاشتراك",
+      "4,000 رصيد Generative شهرياً لميزات Firefly Premium",
+      "100GB تخزين سحابي",
+      "Adobe Fonts + Libraries لمزامنة الخطوط والأصول"
+    ]
+  },
+  {
     "title": "Adobe Creative Cloud Pro (4 أشهر)",
     "price": "35$",
     "icon": "fa-solid fa-pen-nib",
